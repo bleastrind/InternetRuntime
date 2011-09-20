@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Select A Picture from below</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.js"></script> 
+</head>
+<body>
+<img id="i1" src="picture/Chrysanthemum.jpg" >
+<img id="i2" src="picture/Desert.jpg">
+<img id="i3" src="picture/Hydrangeas.jpg">
+<img id="i4" src="picture/LightHOuse.jpg">
+<img id="i5" src="picture/Penguins.jpg">
+<img id="i6" src="picture/Tulips.jpg">
+<script>
+
+function Fclick()
+{
+	var url = ($(this).attr("src"));
+	$.get('SelectPictureServlet?pictureUrl='+url);
+	parent.window.close();
+}
+for(var i=1;i<=6;i++)
+{
+
+$("#i"+i).click(Fclick);
+
+}
+
+</script>
+</body>
+</html>

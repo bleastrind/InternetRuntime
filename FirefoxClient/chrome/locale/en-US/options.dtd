@@ -1,0 +1,8 @@
+<!ENTITY prefwindow.title "Internet OS Client preferences">
+<!ENTITY pane1.title "Internet OS Client preferences">
+<!ENTITY username.label "UserName">
+<!ENTITY username.accesskey "U">
+<!ENTITY password.label "Password">
+<!ENTITY password.accesskey "P">
+<!ENTITY baseurl.label "Internet OS base URL">
+<!ENTITY baseurl.accesskey "B">
