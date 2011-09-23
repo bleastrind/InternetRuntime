@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <body>
+    <header>
+      <h1>Web Intents</h1>
+      <nav class="main">
+        <span>Site: </span>
+        <span><a href="Index.html">Specification</a></span>
+        <span><a href="ExamplesS.html">Examples</a></span>
+        <span><a href="faq.html">FAQ</a></span>
+      </nav>
+
+        <nav class="sub">
+  <span>Page: </span>
+  <a href="#introduction">Introduction</a>
+  <a href="#api">API</a>
+  <a href="#contributing">Contributing</a>
+  </nav>
+
+    </header>
+    
+<section>
+<h2 id="introduction">Introduction</h2>
+<p>
+	Internet used to be a collection of content, which was going well 
+	with each site isolated. With the evolution of the Internet, applications
+	become more important than before. And the connection between them become
+	closer and closer.
+</p>
+<p>
+	There are more and more people to care about this problem. Some applications 
+	provide open API for third part applications to get involved with them, and 
+	they are ready to be as a component of the Internet. However, it's hard and 
+	complicated for programmers to develop such third-part application.
+</p>
+<p>
+	We present an online system with a communication protocol based on it. 
+	It could make the applications on the Internet to be connected with each 
+	other. What's more, users can customize their self Internet linkages through it.
+</p>
+<p>
+InternetRuntime integrated the Internet services and applications. It makes the
+developer's job simple.
+</p>
+<h2 id="api">API</h2>
+<p>
+The InternetRuntime is easy to get access into. What developers need to 
+do is to finish a configuration file. The function of this file is to 
+install the service or application to out system InternetRuntime. The 
+client side just register the match the signal produced and the signal 
+receiver. Then our system will do all left work. It organized all the 
+signal and the applications just like a Unix operate system.
+</p>
+<h3 id="signalregistration">Signal Registration(Install an application)</h3>
+<pre>How to install an application in our InternetRuntime
+&lt;<a href="#application">Application</a>&gt;
+&lt;<a href="#name">Name</a>&gt;PickPic&lt;<a href="#name">Name</a>/&gt;
+&lt;<a href="#listeners">Listeners</a>&gt;
+&nbsp;&nbsp;&lt;<a href="#httplistener">HttpListner</a>&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="#url">Url</a>&gt;http://localhost:8080/PickAPicture/PickAPicture&lt;<a href="#url">Url</a>/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="#matchrule">MatchRule</a> type="urlregex"&gt;.*/signal/getPicture.*&lt;<a href="#matchrule">MatchRule</a>/&gt;
+&nbsp;&nbsp;&lt;<a href="#httplistener">HttpListener</a>/&gt;
+&nbsp;&nbsp;&lt;<a href="#clientlistner">ClientListner</a>&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="#clienttype">ClientType</a>&gt;osclient://internetos/clientsignal/scriptloader&lt;<a href="#cienttype">ClientType</a>/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="#matchrule">MatchRule</a> type="urlregex"&gt;.*/signal/selectPicture.**&lt;<a href="#matchrule">MatchRule</a>/&gt;
+&nbsp;&nbsp;&lt;<a href="#clientlistener">ClientListner</a>/&gt;
+&lt;<a href="#listeners">Listeners/</a>&gt;
+&lt;<a href="#application">Application</a>/&gt;
+</pre>
+<dl>
+  <dt id="application">Application</dt>
+    <dd>Here,developers can install an application into our InternetRuntime system.</dd> 
+  <dt id="name">Name</dt>
+    <dd>The unique name of an application.</dd> 
+  <dt id="Listeners">Listeners</dt>
+    <dd>Developers state the signal, the listener of signal and the type of listener in this area.</dd> 
+  <dt id="httplistener">HttpListener</dt>
+    <dd>Optional, if the signal is http signal, developers can customize the match rule of the signal and the listener here.</dd> 
+  <dt id="url">Url</dt>
+    <dd>This is one side of signal-producer and signal-receiver. If it is a web page, it must state in the url label</dd> 
+  <dt id="matchrule">MatchRule</dt>
+    <dd>Required, in this label, the specific signai is defined.</dd> 
+  <dt id="clienttype">ClientListner</dt>
+    <dd>Optional, if the signal is client signal, developers can customize the match rule of the signal and the listener here.</dd> 
+</dl>
+
+<h3 id="invocation">Invocation</h3>
+<pre>Next, invoke this jsp configuration file in a firefox browser that has installed the client of our InternetRuntime. The installation of the application is successful.
+</pre>
+
+<h2 id="contributing">Contributing</h2>
+<p>
+  If you want to host the InternetRuntime yourself, simply visit 
+  <a href="https://github.com/bleastrind/InternetRuntime">the code repository</a>.
+</p>
+<p>
+  If you want to particpate in the discussion please join our 
+  <a href="">XXXX Group</a>.
+</p>
+
+
+</section>
+
+  </body>
+</html>

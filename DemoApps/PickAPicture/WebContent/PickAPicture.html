@@ -6,12 +6,37 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.js"></script> 
 </head>
 <body>
-<img id="picturePicked" alt="" src="">
 
+<header>
+      <h1>Web Intents</h1>
+      <nav class="main">
+        <span>Site: </span>
+        <span><a href="Index.html">Specification</a></span>
+        <span><a href="Examples.html">Examples</a></span>
+      </nav>
 
+        <nav class="sub">
+  <span>Page: </span>
+  <a href="#introduction">Introduction</a>
+  <a href="#api">API</a>
+  <a href="#extending">Extending</a>
+  <a href="#contributing">Contributing</a>
+  </nav>
+
+    </header>
+ 
+ <h2>Client Application</h2>
+    
 <button  style="width:80; height:30" onclick="pickAction()">
 Pick A Picture
 </button>
+
+<br>
+
+<p>The picture you just select will appear below:</p>
+
+<img id="picturePicked" alt="" src="" height = "60%" width = "40%">
+
 <script>
 function pickAction(){	
 	$.ajax({
