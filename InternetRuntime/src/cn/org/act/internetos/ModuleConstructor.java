@@ -18,6 +18,6 @@ public class ModuleConstructor {
 	}
 	public static IAppDAO getAppDAO(){
 		//return new AppMemoryDAO();
-		return new AppCassandraDAO("localhost:9160");
+		return new AppCassandraDAO("127.0.0.1:9160");
 	}
 }

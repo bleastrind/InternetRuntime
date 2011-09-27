@@ -1,0 +1,14 @@
+<div id="home">
+
+    <h2>This is a test app for AppMarket.</h2>
+	<h2>With HTTP "GET" method.</h2>
+	<h2>Install request from: ${requestUrl}</h2>
+
+<form ACTION = "${requestUrl}" METHOD="POST" >
+	<input type="hidden" name="userId" value="${params.userId}">
+	<input type="hidden" name="appId" value="${appId}">
+	<input type="text" name="config" value="${params.config}">
+	<input type="hidden" name="requestUrl" value="${requestUrl}">
+	<input type="submit" id="ok" value="OK">
+</form>
+</div>

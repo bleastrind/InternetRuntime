@@ -12,11 +12,13 @@ import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
+import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.HSuperColumn;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
+import me.prettyprint.hector.api.query.SliceQuery;
 import me.prettyprint.hector.api.query.SuperColumnQuery;
 import me.prettyprint.hector.api.query.SuperSliceQuery;
 
@@ -37,15 +39,14 @@ import org.apache.thrift.transport.TTransportException;
 
 public class AppCassandraDAO implements IAppDAO{
 
-	final static String KEYSPACE = "Keyspace1";
-	final static String CF = "Applications";
+	final static String KEYSPACE = "InternetRuntime";
+	final static String CF = "UserSpace";
 	
 	
 	Keyspace keyspace;
 	StringSerializer stringSerializer = new StringSerializer();
 	public AppCassandraDAO(String server){
-		Cluster cluster = HFactory.getOrCreateCluster("TestCluster",
-			    new CassandraHostConfigurator(server));
+		Cluster cluster = HFactory.getOrCreateCluster("Test Cluster",server);
 		keyspace = HFactory.createKeyspace(KEYSPACE, cluster);
 		
 	}
@@ -55,6 +56,19 @@ public class AppCassandraDAO implements IAppDAO{
 		ArrayList<Application> res= new ArrayList<Application>();
 		
 		
+		SliceQuery<String, String, String> sliceQuery = HFactory.createSliceQuery(keyspace, new StringSerializer(), new StringSerializer(), new StringSerializer());
+		sliceQuery.setColumnFamily(CF);
+		sliceQuery.setKey(user);
+		sliceQuery.setRange("", "", false, 100);
+		QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+		for (HColumn<String, String> column: result.get().getColumns())
+		{
+			res.add(new Application(user, column.getValue()));
+		}
+		return res;
+		
+		
+		/*
 		SuperSliceQuery<String,String,String,String> query= HFactory.createSuperSliceQuery(keyspace, new StringSerializer(), new StringSerializer(), new StringSerializer(), new StringSerializer());
 		String start="";
 		String finish="";
@@ -80,6 +94,7 @@ public class AppCassandraDAO implements IAppDAO{
 		}
 		
 		return res;
+		*/
 	}
 
 	@Override

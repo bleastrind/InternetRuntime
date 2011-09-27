@@ -1,0 +1,28 @@
+<div id="home">
+
+    <h2>I want to install PickAPicture.</h2>
+
+<form ACTION = "${requestUrl}", >
+	<input type="hidden" name="userId" value="${userId}">
+	<input type="hidden" name="appId" value="${appId}">
+	<input type="hidden" name="config" value='<?xml version="1.0" encoding="UTF-8"?>
+		<Application>
+		<Name>PickPic</Name>
+		<Listeners>
+			<HttpListener>
+					<URL>http://localhost:8080/PickAPicture/PickAPicture</URL>
+					<MatchRule type="urlregex">
+						.*/signal/getPicture.*
+					</MatchRule>
+			</HttpListener>
+			<ClientListener>
+					<ClientType>osclient://internetos/clientsignal/scriptloader</ClientType>
+					<MatchRule type="urlregex">
+						.*/signal/selectPicture.*
+					</MatchRule>		
+			</ClientListener>
+		</Listeners>
+	</Application>'>
+	<input type="submit" id="ok" value="OK">
+</form>
+</div>

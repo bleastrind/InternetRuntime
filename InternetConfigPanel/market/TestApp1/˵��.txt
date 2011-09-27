@@ -1,0 +1,2 @@
+此为AppMarket测试用WEB应用，占用9001端口。
+在AppMarket上注册本应用时应该将installUrl设定为http://localhost:9001

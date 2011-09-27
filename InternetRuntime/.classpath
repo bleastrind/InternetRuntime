@@ -10,5 +10,49 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/InternetOSLib"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/annotations-api.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/catalina-ant.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/catalina-ha.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/catalina-tribes.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/ecj-3.6.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/el-api.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/jasper.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/jasper-el.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-api.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-dbcp.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-i18n-es.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-i18n-fr.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-i18n-ja.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-7.0.11-windows-x86/apache-tomcat-7.0.11/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/cassandra-all-0.7.0.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/cassandra-javautils-0.7.0.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/cglib-nodep-2.2.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/commons-pool-1.5.3.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/FastInfoset-1.2.2.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/hector-core-0.7.0-28.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/hector-core-0.7.0-28-sources.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/high-scale-lib-1.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/jettison-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/joda-time-1.6.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/jul-to-slf4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/libthrift-0.5.0.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/perf4j-0.9.12.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/stax-1.2.0.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/uuid-3.2.0.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/wstx-asl-3.2.7.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/xml-writer-0.2.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/xom-1.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/xpp3_min-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/xstream-1.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/InternetRT/InternetRuntime/WebContent/WEB-INF/lib/xstream-benchmark-1.3.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
