@@ -32,5 +32,7 @@ window.addEventListener("load", function () {
   gBrowser.addEventListener("load", examplePageLoad, true);
 }, false);
 
-
+//TODO move to another place
+// default on
+gCometClient.Begin();
 //DEBUG alert("event Trigger inited");
