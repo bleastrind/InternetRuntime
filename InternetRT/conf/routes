@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+# Signal Processing API
+GET		/signal						org.internetrt.driver.Signal.index
+GET		/signal/head/:signalname			org.internetrt.driver.Signal.head(signalname:String)
+GET		/signal/process/:signalname			org.internetrt.driver.Signal.process(signalname:String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Client Communication API
+GET		/clients/longpollingjsonp	org.internetrt.driver.Client.longpollingjsonp
+GET		/clients/test				org.internetrt.driver.Client.test
