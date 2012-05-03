@@ -2,10 +2,12 @@ package org.internetrt.test
 import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
-import org.internetrt.core.InternetRuntime
 import org.internetrt.core.signalsystem._
 import org.specs2.mock.Mockito
 import org.internetrt.core.configuration._
+import org.internetrt.core.InternetRuntime
+import org.internetrt.core.io.IOManagerComponent
+import org.internetrt.core.Components
 
 
 class SignalRoutingSpec extends Specification with Mockito{
@@ -25,11 +27,16 @@ class SignalRoutingSpec extends Specification with Mockito{
 	  TestEnvironment.signalSystem.handleSignal(null) must beEqualTo(null)
 	}
 	
-	object TestEnvironment extends InternetRuntime
-		with SignalSystemComponent 
-		with ConfigurationSystemComponent{
+	object TestEnvironment extends Components
+	    with SignalSystemComponent 
+		with ConfigurationSystemComponent
+		with IOManagerComponent{
 	  val signalSystem = mock[SignalSystem]
 	  val configurationSystem = mock[ConfigurationSystem]
+	  val ioManager = mock[IOManager]
+	}
+	object TestInternetRuntime extends InternetRuntime{
+	    val components = TestEnvironment
 	}
 //	class MockitoSpec extends Specification { def is =
 //

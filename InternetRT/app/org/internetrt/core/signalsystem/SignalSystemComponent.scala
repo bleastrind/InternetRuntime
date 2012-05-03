@@ -5,5 +5,6 @@ trait SignalSystemComponent {
   
   trait SignalSystem{
     def handleSignal(t:Signal):SignalResponse
+    def getHeadResponse(t:Signal):SignalResponse
   }
 }
