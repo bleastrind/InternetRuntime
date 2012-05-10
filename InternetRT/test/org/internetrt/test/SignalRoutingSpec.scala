@@ -8,6 +8,7 @@ import org.internetrt.core.configuration._
 import org.internetrt.core.InternetRuntime
 import org.internetrt.core.io.IOManagerComponent
 import org.internetrt.core.Components
+import org.internetrt.core.security.SecurityPrivacyComponent
 
 
 class SignalRoutingSpec extends Specification with Mockito{
@@ -30,10 +31,12 @@ class SignalRoutingSpec extends Specification with Mockito{
 	object TestEnvironment extends Components
 	    with SignalSystemComponent 
 		with ConfigurationSystemComponent
-		with IOManagerComponent{
+		with IOManagerComponent
+		with SecurityPrivacyComponent{
 	  val signalSystem = mock[SignalSystem]
 	  val configurationSystem = mock[ConfigurationSystem]
 	  val ioManager = mock[IOManager]
+	  val authCenter = mock[AuthCenter]
 	}
 	object TestInternetRuntime extends InternetRuntime{
 	    val components = TestEnvironment

@@ -5,16 +5,18 @@ import io.IOManagerComponent
 import model.RoutingInstance
 import signalsystem.Signal
 import signalsystem.SignalResponse
-
 import signalsystem.SignalSystemComponent
 import org.internetrt.core.signalsystem.ObjectResponse
+import org.internetrt.core.security.SecurityPrivacyComponent
+import org.internetrt.core.security.AccessToken
 
 /**
  * Trait Components represent the entire combined pure logical system
  */
 trait Components extends SignalSystemComponent 
 with ConfigurationSystemComponent 
-with IOManagerComponent{
+with IOManagerComponent
+with SecurityPrivacyComponent{
 }
 
 /**
@@ -28,6 +30,14 @@ abstract class InternetRuntime{
   def executeSignal(s:Signal):SignalResponse = {
     components.signalSystem.handleSignal(s)
   }
+  def getAuthcodeForServerFlow(appID:String,userID:String,redirect_uri:String):String={
+    components.authCenter.getAuthCode(appID,userID);
+  }
+  
+  def getAccessTokenByAuthtoken(appID:String,authtoken:String,appSecret:String):AccessToken={
+    components.authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
+  }
+  
 }
 
 
@@ -42,10 +52,13 @@ trait StubSignalSystemComponent extends SignalSystemComponent{
 	  }
 }
 trait StubConfigurationSystemComponent extends ConfigurationSystemComponent{
-  val configurationSystem = new ConfigurationSystem{
-  }
+  val configurationSystem = null
 }
 
 trait StubIOManagerComponent extends IOManagerComponent{
   val ioManager = null
+}
+
+trait StubSecurityPrivacyComponent extends SecurityPrivacyComponent{
+  val authCenter = null
 }

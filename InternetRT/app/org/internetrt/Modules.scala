@@ -10,5 +10,14 @@ object SiteInternetRuntime extends InternetRuntime{
 	val components = new Components 
 		  				with StubSignalSystemComponent
 						with StubConfigurationSystemComponent
-						with StubIOManagerComponent{}
+						with StubIOManagerComponent
+						with StubSecurityPrivacyComponent
+						{}
+}
+
+object CONSTS{
+  val SESSIONUID = "UID";
+  val CLIENTID = "CID";
+  val CLIENTSTATUS = "CLIENTSTATUS";
+  val ANONYMOUS = "Anonymous";
 }

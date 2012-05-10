@@ -1,6 +1,6 @@
 package org.internetrt.driver;
 
-import org.internetrt.SiteInternetRuntime;
+import org.internetrt.*;
 import org.internetrt.core.signalsystem.SignalResponse;
 
 import play.mvc.Http.Request;
@@ -13,13 +13,12 @@ public class Signal extends Controller {
 		return ok("It works!");
 	}
 	
-	public static Result head(String signalname){
-		SignalResponse res = SiteInternetRuntime.getHeadResponse(new HttpGetSignal(request()));
-		
-		HttpResponseProcessor processor = new HttpResponseProcessor(res);
-		return processor.generateResult();
-	}
-	
+
+	/**
+	 * Executing a http get signal to run the workflow
+	 * @param signalname
+	 * @return
+	 */
 	public static Result process(String signalname){
 		SignalResponse res =  SiteInternetRuntime.executeSignal(new HttpGetSignal(request()));
 		

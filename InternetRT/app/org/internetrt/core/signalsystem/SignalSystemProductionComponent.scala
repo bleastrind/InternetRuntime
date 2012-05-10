@@ -25,6 +25,7 @@ trait SignalSystemProductionComponent extends SignalSystemComponent{
       val ins = workflowEngine.getRoutingInstance(s)
       return new ObjectResponse(ins)
     }
+    
     def getHeadResponse(s:Signal):SignalResponse={
       val ins = getRoutingInstance(s)
       if(ins == null){
