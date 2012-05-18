@@ -20,4 +20,6 @@ object CONSTS{
   val CLIENTID = "CID";
   val CLIENTSTATUS = "CLIENTSTATUS";
   val ANONYMOUS = "Anonymous";
+  
+  val ACCESSTOKEN = "access_token";
 }

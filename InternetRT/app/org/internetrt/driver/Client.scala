@@ -46,12 +46,16 @@ object Client extends Controller {
     Thread.sleep(10000)
     "sfd"
   }
-  def longpollingjsonp = Action {
-    request =>
+  
+  def send = Action{
+    Ok
+  }
+  
+  def getLongPollingResult(request:Request[AnyContent],wrapper:(String=>String))={
       val uid = request.session.get(CONSTS.SESSIONUID).getOrElse(CONSTS.ANONYMOUS);
       val cid = request.queryString.get(CONSTS.CLIENTID) match {
         case Some(x::rest)=>x //get the first client id
-        case None=> null
+        case None=> UUID.randomUUID().toString() // else a new one
       }
       val status = request.queryString.get(CONSTS.CLIENTSTATUS) match{
         case Some(x::rest)=>x //get the first client id
@@ -64,23 +68,36 @@ object Client extends Controller {
 
       val result = ClientMessageActor.ref ? Join(uid, cid ,status) recover{
         case e:AskTimeoutException => {
-          ClientMessageActor.ref ! Quit()
+
           "Timeout:"+cid // The client script can request with the cid next time s.t. it can set the status of the channel
         }
       }
 
       Async {
+        ClientMessageActor.ref ! Quit()
+        
         result.mapTo[String].asPromise
-          .map(i => 
-          Ok(request.queryString.get("callback").map(s => s.head).get + "(" + i + ")"))
-      }
+          .map(i => Ok(wrapper(i)))
+      }   
+  }
+  def longpolling = Action{
+    request =>
+      getLongPollingResult(request,i => i)
+  }
+  def longpollingjsonp = Action {
+    request =>
+      val callback = request.queryString.get("callback").map(s => s.head).get
+      getLongPollingResult(request,i => callback + "(" + i + ")")
   }
 }
 class PageJavaScriptSlimClientDriver(cid:String) extends ClientDriver{
 	var channel:ActorRef = null
 	
-	def response(data:String){
-	  channel ! data
+	def response(data:String, msgID:Option[String]){
+	  channel ! "{cid:"+cid+"\ndata:"+data+ (msgID match {
+	    case Some(id)=>"\nmsgID:"+id
+	    case _=>""
+	  })+"}"
 	}
 }
 
@@ -100,9 +117,8 @@ class ClientMessageActor extends Actor {
         case Some(c)=> c
         case None=>{
            //create new one
-          val newcid = UUID.randomUUID().toString()
-    	  val c = new PageJavaScriptSlimClientDriver(newcid)
-    	  pagedrivers += (newcid -> c)
+    	  val c = new PageJavaScriptSlimClientDriver(cid)
+    	  pagedrivers += (cid -> c)
     	  
     	  //register the channel as one of the users("uid")
     	  clientsManager.join(uid,c)
@@ -143,7 +159,7 @@ class ClientMessageActor extends Actor {
 
     case Message(uid, msg) => {
       Logger.info("Got message, send it to:" + uid)
-      clientsManager.write(uid, msg, Seq(ClientStatus.Active.toString()))
+      clientsManager.sendevent(uid, msg, Seq(ClientStatus.Active.toString()))
     }
 
   }
@@ -156,7 +172,7 @@ object ClientMessageActor {
   case class Join(uid:String,cid:String,clientstatus:String) extends Event
   case class Quit() extends Event
   case class Message(uid:String, msg: String) extends Event
-  lazy val system = ActorSystem("chatroom")
+  lazy val system = ActorSystem("clientsmessagepusher")
   lazy val ref = system.actorOf(Props[ClientMessageActor])
   
   val clientsManager = new ClientsManager()

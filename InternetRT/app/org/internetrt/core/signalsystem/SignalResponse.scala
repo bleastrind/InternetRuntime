@@ -7,6 +7,10 @@ trait SignalResponse {
   def getResponse:String
 }
 
+class RejectResponse(msg:String) extends SignalResponse{
+  def getResponse = msg
+}
+
 class ObjectResponse(o:Any) extends SignalResponse{
   def getResponse = o.toString()
 }

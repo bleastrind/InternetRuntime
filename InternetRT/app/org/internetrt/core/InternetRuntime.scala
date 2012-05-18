@@ -30,6 +30,11 @@ abstract class InternetRuntime{
   def executeSignal(s:Signal):SignalResponse = {
     components.signalSystem.handleSignal(s)
   }
+  
+  def getUserAndFromByAccesstoken(accesstoken:String):(String,String)={
+    components.authCenter.getUserIDAppIDPair(accesstoken);
+  }
+  
   def getAuthcodeForServerFlow(appID:String,userID:String,redirect_uri:String):String={
     components.authCenter.getAuthCode(appID,userID);
   }

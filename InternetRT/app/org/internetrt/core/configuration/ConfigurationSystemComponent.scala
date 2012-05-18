@@ -7,6 +7,6 @@ trait ConfigurationSystemComponent {
   val configurationSystem:ConfigurationSystem
   
   trait ConfigurationSystem{
-    def confirmRouting(r:Routing)
+    def confirmRouting(userID:String,app:String,r:Routing)
   }
 }

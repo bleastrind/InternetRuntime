@@ -1,7 +1,10 @@
 package org.internetrt.core.signalsystem
 
 trait Signal {
-	def getIdentifier():String //Identifier should be able to recognize the signal and its source  
+  def user:String
+  def from:String
+  def uri:String 
+  //def identifier:String//Identifier should be able to recognize the signal and its source  
 }
 
 /**
