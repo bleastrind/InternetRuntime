@@ -34,6 +34,17 @@ object Client extends Controller {
     clients(user).push(data);
   }
 
+  def response = Action{
+    request=>
+      val uid = request.session.get(CONSTS.SESSIONUID).getOrElse(CONSTS.ANONYMOUS);
+      val msg = request.body.asText.getOrElse("")
+      val success = request.queryString.get(CONSTS.MSGID) match{ 
+        case Some(x::xs) => ClientMessageActor.clientsManager.response(uid,msg,x)
+        case _ => false
+      }
+      
+      Ok(success.toString())      
+  }
   def test = Action {
     request=>
     val uid = request.session.get(CONSTS.SESSIONUID).getOrElse(CONSTS.ANONYMOUS);
@@ -94,8 +105,8 @@ class PageJavaScriptSlimClientDriver(cid:String) extends ClientDriver{
 	var channel:ActorRef = null
 	
 	def response(data:String, msgID:Option[String]){
-	  channel ! "{cid:"+cid+"\ndata:"+data+ (msgID match {
-	    case Some(id)=>"\nmsgID:"+id
+	  channel ! "{cid:"+cid+";data:"+data+ (msgID match {
+	    case Some(id)=>";"+CONSTS.MSGID+":"+id
 	    case _=>""
 	  })+"}"
 	}
@@ -175,5 +186,5 @@ object ClientMessageActor {
   lazy val system = ActorSystem("clientsmessagepusher")
   lazy val ref = system.actorOf(Props[ClientMessageActor])
   
-  val clientsManager = new ClientsManager()
+  val clientsManager = ClientsManager /**TODO direct ref: 1/3  */
 }

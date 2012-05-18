@@ -15,6 +15,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 # Client Communication API
 GET		/clients/longpollingjsonp	org.internetrt.driver.Client.longpollingjsonp
 GET		/clients/longpolling	org.internetrt.driver.Client.longpolling
+GET		/clients/response		org.internetrt.driver.Client.response
 GET		/clients/test				org.internetrt.driver.Client.test
 
 GET		/api/query/:signalname			org.internetrt.driver.API.head(signalname:String)

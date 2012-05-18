@@ -3,6 +3,14 @@ import java.util.UUID
 import akka.actor.ActorRef
 import akka.actor.Actor
 import akka.actor.ActorSystem
+import akka.dispatch.Future
+import akka.actor.Props
+import ClientStubActor._
+import akka.pattern._
+import akka.util.Timeout
+import akka.util.duration._
+import akka.dispatch.Await
+
 
 /**
  * TODO use enum
@@ -24,7 +32,7 @@ trait ClientDriver{
 
 }
 
-class ClientsManager {
+object ClientsManager {
   import scala.collection.mutable.Map
  val clients:Map[String,UserConnector]=Map.empty
 	  
@@ -42,19 +50,21 @@ class ClientsManager {
 	    driver.onClientDistory = connector.unregister;
 	  }
   
-  		def input(uid:String,msg:String,msgID:Option[String]=None) = {
+  		def response(uid:String,msg:String,msgID:String) = {
   		  val connector = clients.get(uid).get;
-	      connector.input(msg,msgID);
+	      connector.response(msg,msgID);
   		}
 	   def sendevent(uid:String,msg:String,allowedStatus:Seq[String]){
 	     val connector = clients.get(uid).get;
 	     connector.output(msg,allowedStatus);
 	   }
-//	   def ask(uid:String,msg:String,allowedStatus:Seq[String]) = {
-//	     val connector = clients.get(uid).get;
-//	     connector.ask(msg,allowedStatus);
-//	   }
+	   def ask(uid:String,msg:String,allowedStatus:Seq[String]):Future[String] = {
+	     val connector = clients.get(uid).get;
+	     connector.ask(msg,allowedStatus);
+	   }
 }	
+
+
 class UserConnector(uid:String){
 import scala.collection.mutable.ListBuffer;
 import scala.collection.mutable.Map;
@@ -62,29 +72,29 @@ import scala.collection.Seq;
 
 	  val clients = ListBuffer.empty[ClientDriver];
 	  
-      /**TODO multi thread sync &  confliction*/
-      //val waitingMessages = Map.empty[String,ActorRef]; 
-	  
+ 
 	  def register(client:ClientDriver){
 	    clients += client;
 	  }
 	  def unregister(client:ClientDriver){
 	    clients -= client;
 	  }
-	  def input(msg:String,msgid:Option[String])={
-	    msgid match{
-//	      case Some(id)=> waitingMessages.get(id) match {
-//	        case Some(actor) => actor ! msg
-//	      }
-	      case None => System.out.println(msg) /** This is meanless to real request, Since it should request api directly */
+	  def response(msg:String,msgid:String):Boolean={
+	    implicit val timeout = Timeout(2.seconds) //It's almost sync request to give response
+        val result = (ClientStubActor.ref ? Response(msg,msgid)).recover{
+	        case e => false
 	    }
+	    Await.result(result.mapTo[Boolean],timeout.duration);
 	  }
-//	  def ask(msg:String,allowedStatus:Seq[String])={
-//	    val msgID = UUID.randomUUID().toString()
-//	    val actor = 
-//	    waitingMessages += (msgID -> .sys;
-//	    output(msg,allowedStatus,Some(msgID));
-//	  }
+	  def ask(msg:String,allowedStatus:Seq[String]):Future[String]={
+	     implicit val timeout = Timeout(10.seconds)
+	     
+	     val msgID = Counter.count();
+	     
+	     output(msg,allowedStatus,Some(msgID));// Send message to clients
+	     
+	     (ClientStubActor.ref ? Request(msgID)).mapTo[String]; //Record the callback actorref
+	  }
 	  def output(msg:String,allowedStatus:Seq[String],msgID:Option[String]=None){
 	    for(c <- clients){
 	      if(allowedStatus.contains(c.clientstatus))
@@ -92,3 +102,52 @@ import scala.collection.Seq;
 	    }
 	  }
 	}
+
+
+
+class ClientStubActor extends Actor{
+        /**TODO check whether multi thread sync &  confliction work well here*/
+  import collection.JavaConversions._
+  val waitingMessages:scala.collection.mutable.ConcurrentMap[String,ActorRef] = new java.util.concurrent.ConcurrentHashMap[String,ActorRef]()
+      
+  
+  def receive = {
+    case Request(msgID)=>{
+       waitingMessages += (msgID -> sender)
+    }
+    case Response(msg,msgID)=>{
+      waitingMessages.get(msgID) match{
+        case Some(actor)=>{
+        	actor ! msg
+        	waitingMessages -= msgID /**TODO check whether work here*/
+        	sender ! true
+        }
+        case _ =>  sender ! false
+      } 
+    }
+  }
+}
+
+object ClientStubActor{
+  case class Request(msgID:String)
+  case class Response(msg:String,msgID:String)
+  lazy val system = ActorSystem("clientsmessagepusher")
+  lazy val ref = system.actorOf(Props[ClientStubActor])
+  
+  val clientsdriver = ClientsManager /**TODO direct ref: 2/3  */
+}
+
+object Counter{
+  
+  /** TODO check whether it's the right way to avoid id conflict*/
+  import scala.concurrent.stm._
+  val countervar = Ref.apply(0)   
+  def count()={
+    atomic{
+      implicit txn=>
+        val counter = countervar.get(txn);
+        countervar.set(counter + 1)
+        counter.toString()
+    }
+  }
+}
