@@ -1,69 +1,62 @@
 package org.internetrt.core
 
-import configuration.ConfigurationSystemComponent
-import io.IOManagerComponent
 import model.RoutingInstance
 import signalsystem.Signal
 import signalsystem.SignalResponse
-import signalsystem.SignalSystemComponent
 import org.internetrt.core.signalsystem.ObjectResponse
-import org.internetrt.core.security.SecurityPrivacyComponent
 import org.internetrt.core.security.AccessToken
+import org.internetrt.core.security.AuthCenter
+import org.internetrt.core.signalsystem.SignalSystem
+import org.internetrt.core.io.IOManager
+import org.internetrt.core.configuration.ConfigurationSystem
 
-/**
- * Trait Components represent the entire combined pure logical system
- */
-trait Components extends SignalSystemComponent 
-with ConfigurationSystemComponent 
-with IOManagerComponent
-with SecurityPrivacyComponent{
-}
 
 /**
  * The Facade of the logical system
  */
 abstract class InternetRuntime{
-  val components:Components
+    
+  object errReport extends {
+    val global:InternetRuntime.this.type = InternetRuntime.this
+  } 
+   
+  // sub-components --------------------------------------------------
+  val signalSystem:SignalSystem
+  val authCenter:AuthCenter
+  val ioManager:IOManager
+  val confSystem:ConfigurationSystem
+  
   def getHeadResponse(s:Signal):SignalResponse = {
-    components.signalSystem.getHeadResponse(s)
+    signalSystem.getHeadResponse(s)
   }
   def executeSignal(s:Signal):SignalResponse = {
-    components.signalSystem.handleSignal(s)
+    signalSystem.handleSignal(s)
   }
-  
-  def getUserAndFromByAccesstoken(accesstoken:String):(String,String)={
-    components.authCenter.getUserIDAppIDPair(accesstoken);
+  def getAuthcodeForWorkflow(appID:String,appSecret:String,workflowID:String)={
+    authCenter.genAuthCode(appID,appSecret,workflowID)
   }
-  
   def getAuthcodeForServerFlow(appID:String,userID:String,redirect_uri:String):String={
-    components.authCenter.getAuthCode(appID,userID);
+    authCenter.genAuthCode(appID,userID);
   }
-  
+  def getUserAndFromByAccesstoken(accesstoken:String)={
+    authCenter.getUserIDAppIDPair(accesstoken)
+  }
   def getAccessTokenByAuthtoken(appID:String,authtoken:String,appSecret:String):AccessToken={
-    components.authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
+    authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
   }
   
 }
 
 
-trait StubSignalSystemComponent extends SignalSystemComponent{
-  val signalSystem = new SignalSystem{
+trait StubSignalSystem extends SignalSystem{
+
 	    def handleSignal(t:Signal):SignalResponse={
 	          new ObjectResponse("Stub")
 	    }
 	    def getHeadResponse(t:Signal):SignalResponse={
 	         new ObjectResponse("Stub")
 	    }
-	  }
-}
-trait StubConfigurationSystemComponent extends ConfigurationSystemComponent{
-  val configurationSystem = null
+
 }
 
-trait StubIOManagerComponent extends IOManagerComponent{
-  val ioManager = null
-}
 
-trait StubSecurityPrivacyComponent extends SecurityPrivacyComponent{
-  val authCenter = null
-}

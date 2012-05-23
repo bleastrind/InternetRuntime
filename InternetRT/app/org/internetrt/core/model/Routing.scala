@@ -12,6 +12,7 @@ abstract class RoutingInstance(r:Routing){
   val id:String// It's a random id, used to pass along the workflow, s.t. user can identify the ligal running workflow
   val timestamp:Int
   val state:String
-   def acceptRequest(s:Signal)
+  def acceptRequest(s:Signal)
   def getOutputAdapter={}
+  def getCurrentUser:String
 }

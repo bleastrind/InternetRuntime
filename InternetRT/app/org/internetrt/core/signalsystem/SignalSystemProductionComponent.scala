@@ -1,16 +1,15 @@
 package org.internetrt.core.signalsystem
-import org.internetrt.persistent.RoutingResourcePoolComponents
-import org.internetrt.core.signalsystem.workflow.WorkflowEngineComponents
+import org.internetrt.persistent._
+import org.internetrt.core.signalsystem.workflow._
 import org.internetrt.core.I18n
+import org.internetrt.core.model.RoutingInstance
 
 
-trait SignalSystemProductionComponent extends SignalSystemComponent{
-        this:RoutingResourcePoolComponents with WorkflowEngineComponents=>
-
-  val signalSystem = new SignalSystemImpl()
+  abstract class SignalSystemImpl extends SignalSystem{
+    
+  val workflowEngine:WorkflowEngine
+  val routingResourcePool:RoutingResourcePool
   
-  class SignalSystemImpl extends SignalSystem{
-          
     private def getRoutingInstance(s:Signal) = workflowEngine.getRoutingInstance(s)
     
     private def getRouting(s:Signal)={
@@ -36,5 +35,8 @@ trait SignalSystemProductionComponent extends SignalSystemComponent{
       }else
     	return new ObjectResponse(ins)
     }
+    
+    def getRoutingInstaceByworkflowID(workflowID:String):RoutingInstance={
+      workflowEngine.getRoutingInstaceByworkflowID(workflowID)
+    }
   } 
-}

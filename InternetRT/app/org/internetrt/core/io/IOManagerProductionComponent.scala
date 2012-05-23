@@ -1,11 +1,9 @@
 package org.internetrt.core.io
 import akka.dispatch.Future
 import org.internetrt.driver.clientmanager.ClientsManager
-trait IOManagerProductionComponent extends IOManagerComponent{
-	val ioManager = new IOManagerImpl();
 
 	
-	class IOManagerImpl extends IOManager{
+	abstract class IOManagerImpl extends IOManager{
 		 val clientsdriver = ClientsManager /**TODO direct ref: 3/3  */
 	  
 	     def sendToClient(uid:String,msg:String,allowedStatus:Seq[String])={
@@ -17,6 +15,5 @@ trait IOManagerProductionComponent extends IOManagerComponent{
 	        clientsdriver.ask(uid,msg,allowedStatus)
 	     }
 	}
-	
 
-}
+

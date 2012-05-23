@@ -7,7 +7,8 @@ GET     /                           controllers.Application.index
 
 # Signal Processing API
 GET		/signal						org.internetrt.driver.Signal.index
-GET		/signal/process/:signalname			org.internetrt.driver.Signal.process(signalname:String)
+GET		/signal/process/:signalname			org.internetrt.driver.SignalController.process(signalname:String)
+GET		/signal/query/:signalname			org.internetrt.driver.SignalController.head(signalname:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -18,4 +19,3 @@ GET		/clients/longpolling	org.internetrt.driver.Client.longpolling
 GET		/clients/response		org.internetrt.driver.Client.response
 GET		/clients/test				org.internetrt.driver.Client.test
 
-GET		/api/query/:signalname			org.internetrt.driver.API.head(signalname:String)
