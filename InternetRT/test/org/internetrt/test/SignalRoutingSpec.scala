@@ -6,9 +6,6 @@ import org.internetrt.core.signalsystem._
 import org.specs2.mock.Mockito
 import org.internetrt.core.configuration._
 import org.internetrt.core.InternetRuntime
-import org.internetrt.core.io.IOManagerComponent
-import org.internetrt.core.Components
-import org.internetrt.core.security.SecurityPrivacyComponent
 import org.internetrt.core.io.IOManager
 import org.internetrt.core.security.AuthCenter
 
@@ -32,13 +29,11 @@ class SignalRoutingSpec extends Specification with Mockito{
 	
 	object TestEnvironment extends InternetRuntime{
 	  val signalSystem = mock[SignalSystem]
-	  val configurationSystem = mock[ConfigurationSystem]
+	  val confSystem = mock[ConfigurationSystem]
 	  val ioManager = mock[IOManager]
 	  val authCenter = mock[AuthCenter]
 	}
-	object TestInternetRuntime extends InternetRuntime{
-	    val components = TestEnvironment
-	}
+
 //	class MockitoSpec extends Specification { def is =
 //
 //    "A java list can be mocked"                                                    ^

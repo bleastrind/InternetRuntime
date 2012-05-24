@@ -7,9 +7,9 @@ class SignalSpedification extends Specification{ override def is =
     "This is a specification to check the signal dispatching works well"         ^
                                                                                 p^
     "The normal signal should"                                                   ^
-      "[Function]notify the intereptors"                                               ! e1^
-      "[Safe]start with 'Hello'"                                                   ! e2^
-      "[Performance]end with 'world'"                                                     ! e3^
+      "[Function]notify the intereptors"                                     ! e1^
+      "[Safe]start with 'Hello'"                                             ! e2^
+      "[Performance]end with 'world'"                                        ! e3^
                                                                                 p^
     "The sip type signal should"  ^
       "Given the sip request" ^ Step(request) ^

@@ -2,6 +2,7 @@ package org.internetrt.core.security
 import org.internetrt.persistent.{AccessTokenPool,AuthCodePool,AppPool}
 import java.util.UUID
 import java.util.Date
+import org.internetrt.exceptions.AuthDelayException
 
 abstract class AuthCenterImpl extends AnyRef 
   with AuthCenter{
@@ -12,8 +13,9 @@ abstract class AuthCenterImpl extends AnyRef
   val authCodePool:AuthCodePool
   val appPool:AppPool
   
-  def checkApp(appID:String,appSecret:String)={
-    appPool.getAppSecretByID(appID) eq appSecret
+  def checkApp(appID:String,appSecret:String):Unit={
+    if( appPool.getAppSecretByID(appID) != appSecret )
+      throw new AuthDelayException()
   }
   
   def genAuthCode(appID:String,userID:String):String = {
@@ -24,8 +26,9 @@ abstract class AuthCenterImpl extends AnyRef
   def genAuthCode(appID:String,appSecret:String,workflowID:String):String={
      val routingInstance  = signalSystem.getRoutingInstaceByworkflowID(workflowID);
      val userID = routingInstance.getCurrentUser
-     if (!checkApp(appID,appSecret))
-       return null
+     
+     checkApp(appID,appSecret)
+     
      genAuthCode(appID,userID)
   }
 	  /**
@@ -34,23 +37,25 @@ abstract class AuthCenterImpl extends AnyRef
   def genAccessTokenByAuthToken(authtoken:String,appID:String,appSecret:String):AccessToken ={
     
     //Make sure the app send the request it self
-    if( !checkApp(appID, appSecret))
-      return null
-      
+    checkApp(appID, appSecret)
+    
     authCodePool.get(authtoken) match{
       case Some((appID,userID)) =>{
         
         val accessToken = AccessToken(UUID.randomUUID().toString(),new Date(),null)
+
         accessTokenPool.put(accessToken.value,(accessToken,appID,userID))
         accessToken
       }
+      case None => null
     }
   }
 	  
 	  /**
 	   * This part is only for internal use
 	   */
-  private[core] def getUserIDAppIDPair(accessToken:String):(String,String) ={
+  protected[core] def getUserIDAppIDPair(accessToken:String):(String,String) ={
+
     accessTokenPool.get(accessToken) match{
       case Some((token,appID,userID))=>{
           (appID,userID)
