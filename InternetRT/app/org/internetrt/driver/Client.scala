@@ -43,7 +43,7 @@ object Client extends Controller {
         case _ => false
       }
       
-      Ok(success.toString())      
+      Ok(success.toString()).withHeaders("Access-Control-Allow-Origin" -> "*")      
   }
   def test = Action {
     request=>
@@ -62,7 +62,7 @@ object Client extends Controller {
     Ok
   }
   
-  def getLongPollingResult(request:Request[AnyContent],wrapper:(String=>String))={
+  def getLongPollingResult(request:Request[AnyContent],wrapper:(String=>Result))={
       val uid = request.session.get(CONSTS.SESSIONUID).getOrElse(CONSTS.ANONYMOUS);
       val cid = request.queryString.get(CONSTS.CLIENTID) match {
         case Some(x::rest)=>x //get the first client id
@@ -88,17 +88,17 @@ object Client extends Controller {
         ClientMessageActor.ref ! Quit()
         
         result.mapTo[String].asPromise
-          .map(i => Ok(wrapper(i)))
+          .map(i => wrapper(i))
       }   
   }
   def longpolling = Action{
     request =>
-      getLongPollingResult(request,i => i)
+      getLongPollingResult(request,i => Ok(i).withHeaders("Access-Control-Allow-Origin" -> "*"))
   }
   def longpollingjsonp = Action {
     request =>
       val callback = request.queryString.get("callback").map(s => s.head).get
-      getLongPollingResult(request,i => callback + "(" + i + ")")
+      getLongPollingResult(request,i => Ok(callback + "(" + i + ")"))
   }
 }
 class PageJavaScriptSlimClientDriver(cid:String) extends ClientDriver{
