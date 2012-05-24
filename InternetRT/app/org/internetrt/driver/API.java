@@ -1,6 +1,8 @@
 package org.internetrt.driver;
 
 
+import javax.security.sasl.AuthenticationException;
+
 import org.internetrt.*;
 import org.internetrt.core.security.*;
 import org.internetrt.core.signalsystem.SignalResponse;
@@ -42,5 +44,26 @@ public class API extends Controller {
 		return ok("{access_token:\""+accesstoken.value()+
 				"\"\nexpires_in: "+accesstoken.expire()+
 				"\nrefresh_token=\""+accesstoken.refresh()+"\"}");
+	}
+	
+	
+	public static Result register(){
+		String username = request().queryString().get("username")[0];
+		String password = request().queryString().get("password")[0];
+		return ok(SiteInternetRuntime.register(username,password));
+	}
+	public static Result login(){
+		String username = request().queryString().get("username")[0];
+		String password = request().queryString().get("password")[0];
+		
+		try{
+			String uid = SiteInternetRuntime.login(username,password);
+
+			session().put(CONSTS.SESSIONUID(), uid);
+			return ok();
+		}catch(Exception e){
+			return ok(e.getMessage());
+		}
+		
 	}
 }

@@ -45,6 +45,12 @@ abstract class InternetRuntime{
     authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
   }
   
+  def register(username:String,password:String):String={
+    if (authCenter.register(username,password)) "success" else "failed"
+  }
+  def login(username:String,password:String):String={
+      authCenter.login(username,password)
+  }
 }
 
 

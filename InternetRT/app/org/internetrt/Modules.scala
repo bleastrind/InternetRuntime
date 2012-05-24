@@ -33,6 +33,7 @@ object SiteInternetRuntime extends InternetRuntime{
 }
 
 trait MemoryAuthCenter extends AuthCenterImpl{
+  object internalUserPool extends StubInternalUserPool
   object accessTokenPool extends StubAccessTokenPool
   object authCodePool extends StubAuthCodePool 
   object appPool extends StubAppPool
