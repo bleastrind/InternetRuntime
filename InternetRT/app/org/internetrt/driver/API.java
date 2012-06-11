@@ -35,7 +35,7 @@ public class API extends Controller {
 	 * @return
 	 */
 	public static Result authorize(String appID, String appSecret, String workflowID){
-		String code = SiteInternetRuntime.getAuthcodeForWorkflow(appID, appSecret,workflowID);
+		String code = SiteInternetRuntime.getAuthcodeForActionFlow(appID, appSecret,workflowID);
 		return ok("{code:"+code+"}");
 	}
 	

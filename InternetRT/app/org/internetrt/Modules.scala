@@ -10,6 +10,7 @@ import org.internetrt.core.signalsystem.workflow.WorkflowEngine
 import org.internetrt.core.model.Routing
 import org.internetrt.core.model.RoutingInstance
 import org.internetrt.core.signalsystem.Signal
+import org.internetrt.core.signalsystem.workflow.WorkflowEngineImpl
 
 
 /**
@@ -40,12 +41,8 @@ trait MemoryAuthCenter extends AuthCenterImpl{
 }
 
 trait MemorySignalSystem extends SignalSystemImpl{
-  object workflowEngine extends WorkflowEngine{
-    def initWorkflow(routing:Routing):RoutingInstance = null
-		
-		def getRoutingInstance(s:Signal):RoutingInstance = null
-		
-		def getRoutingInstaceByworkflowID(workflowID:String):RoutingInstance = null
+  object workflowEngine extends WorkflowEngineImpl{
+	  object routingInstancePool extends StubRoutingInstancePool
   }
   object routingResourcePool extends MemoryRoutingResourcePool
 }

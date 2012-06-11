@@ -3,18 +3,21 @@ import org.internetrt.core.model.Routing
 
 
 	trait RoutingResourcePool {
-		def getRoutingBySignal(signaluri:String):Option[Routing];
+		def getRoutingsBySignal(signaluri:String):Seq[Routing];
 		
 		def saveRouting(r:Routing):Boolean;
 	}
 
 
 	class MemoryRoutingResourcePool extends RoutingResourcePool {
-	    val a:scala.collection.mutable.Map[String,Routing]  = scala.collection.mutable.Map.empty[String,Routing] 
+	    val a:scala.collection.mutable.Map[String,Seq[Routing]]  = scala.collection.mutable.Map.empty[String,Seq[Routing]] 
 		//a.put("")
 	    
-	    def getRoutingBySignal(signalID:String):Option[Routing] = {
-		   a.get(signalID)
+	    def getRoutingsBySignal(signalID:String):Seq[Routing] = {
+		   a.get(signalID) match {
+		     case Some(s) => s
+		     case _ => Seq.empty
+		   }
 		}
 	    def saveRouting(r:Routing)=false
 	}

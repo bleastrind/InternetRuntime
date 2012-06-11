@@ -2,7 +2,7 @@ package org.internetrt.core.security
 import org.internetrt.core.InternetRuntime
 import java.util.Date
 
-case class AccessToken(value:String,expire:Date,refresh:String)
+case class AccessToken(value:String,expire:Date,refresh:String);
 
 	trait AuthCenter{
 	  val global:InternetRuntime
@@ -36,6 +36,10 @@ case class AccessToken(value:String,expire:Date,refresh:String)
 	   */
 	  def genAccessTokenByAuthToken(authtoken:String,appID:String,appSecret:String):AccessToken
 	  
+	  /**
+	   * get userID by accessToken , app should provide it's secret s.t. only it can get the userid by itself's accesstoken
+	   */
+	  def getUserIDByAccessToken(accessToken:String,appSecret:String):String
 	  /**
 	   * This part is only for internal use
 	   */

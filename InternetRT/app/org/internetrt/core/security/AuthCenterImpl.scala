@@ -5,6 +5,7 @@ import java.util.Date
 import org.internetrt.exceptions._
 import org.internetrt.persistent.InternalUserPool
 import org.internetrt.util.Encrypt
+import org.internetrt.core.I18n
 
 
 abstract class AuthCenterImpl extends AnyRef 
@@ -51,8 +52,11 @@ abstract class AuthCenterImpl extends AnyRef
     code
   }
   def genAuthCode(appID:String,appSecret:String,workflowID:String):String={
-     val routingInstance  = signalSystem.getRoutingInstaceByworkflowID(workflowID);
-     val userID = routingInstance.getCurrentUser
+     val routingInstance = signalSystem.getRoutingInstaceByworkflowID(workflowID) match{
+       case Some(ins) => ins
+       case _ => throw new AuthDelayException(I18n.REJECT)
+     };
+     val userID = routingInstance.userID;
      
      checkApp(appID,appSecret)
      
@@ -78,6 +82,16 @@ abstract class AuthCenterImpl extends AnyRef
       case None => null
     }
   }
+  
+  def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
+	  accessTokenPool.get(accessToken) match{
+      case Some((token,appID,userID))=>{
+          checkApp(appID, appSecret)
+          userID
+      }
+      case None => null
+    }
+  }
 	  
 	  /**
 	   * This part is only for internal use
@@ -86,7 +100,7 @@ abstract class AuthCenterImpl extends AnyRef
 
     accessTokenPool.get(accessToken) match{
       case Some((token,appID,userID))=>{
-          (appID,userID)
+          (userID,appID)
       }
       case None => null
     }

@@ -57,16 +57,17 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 		  TestEnvironment.getAuthcodeForServerFlow(a,u,"http")
 		}
 	}	
-	object access extends When[String,AccessToken]{
+	object access extends When[String,(AccessToken,String)]{
 		def extract(p:String, text:String) = {
 		  val (a,s) = extract2(text)
-		  TestEnvironment.getAccessTokenByAuthtoken(a,p,s)
+		  (TestEnvironment.getAccessTokenByAuthtoken(a,p,s),s) //TODO secret is not installed??!
 		}
 	}
-	object request extends Then[AccessToken]{
-	  def extract(p:AccessToken, text:String):Result = {
-	    val (app,user) = TestEnvironment.authCenter.getUserIDAppIDPair(p.value);
-	    app == "appid" and user == "userid"
+	object request extends Then[(AccessToken,String)]{
+	  def extract(p:(AccessToken,String), text:String):Result = {
+	    val (app,user) = TestEnvironment.authCenter.getUserIDAppIDPair(p._1.value);
+	    val uid = TestEnvironment.getUserIDByAccessToken(p._1.value,p._2)
+	    app == "appid" and user == "userid" and user == uid
 	  
 	  }
 	}

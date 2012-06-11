@@ -20,49 +20,100 @@ abstract class InternetRuntime{
     val global:InternetRuntime.this.type = InternetRuntime.this
   } 
    
-  // sub-components --------------------------------------------------
+  /*************************************************************************
+  * ---------------------------- sub component-----------------------------*
+  *************************************************************************/ 
   val signalSystem:SignalSystem
   val authCenter:AuthCenter
   val ioManager:IOManager
   val confSystem:ConfigurationSystem
   
-  def getHeadResponse(s:Signal):SignalResponse = {
-    signalSystem.getHeadResponse(s)
-  }
-  def executeSignal(s:Signal):SignalResponse = {
-    signalSystem.handleSignal(s)
-  }
-  def getAuthcodeForWorkflow(appID:String,appSecret:String,workflowID:String)={
+  /*************************************************************************
+  * ---------------------------- security management-----------------------*
+  *************************************************************************/ 
+  
+  /**
+   * 
+   */
+  def getAuthcodeForActionFlow(appID:String,appSecret:String,workflowID:String)={
     authCenter.genAuthCode(appID,appSecret,workflowID)
   }
   def getAuthcodeForServerFlow(appID:String,userID:String,redirect_uri:String):String={
     authCenter.genAuthCode(appID,userID);
-  }
-  def getUserAndFromByAccesstoken(accesstoken:String)={
-    authCenter.getUserIDAppIDPair(accesstoken)
+
   }
   def getAccessTokenByAuthtoken(appID:String,authtoken:String,appSecret:String):AccessToken={
     authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
   }
+  def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
+    authCenter.getUserIDByAccessToken(accessToken,appSecret)
+  }
+	  
   
   def register(username:String,password:String):String={
     if (authCenter.register(username,password)) "success" else "failed"
   }
   def login(username:String,password:String):String={
       authCenter.login(username,password)
+  }  
+  
+  /**************************************************************************
+   * ---------------------------- signal processing-------------------------*
+   *   Event is a signal that do not except a response                      *
+   *   Request is a signal that except a response                           *
+   *   Action is a sequence of the combinations of signals and signal handl-*
+   * ers to achieve a meanful behaviour in the userspace, it's managed as w-*
+   * orkflow                                                                * 
+   * 
+   *   Each request is separated according to it's caller, UserInterface is *
+   * granted highest trust and can access the userID directly while ThirdPa-*
+   * rt apps have to get accesstoken from security component first          *  
+   **************************************************************************/
+  def triggerEventFromUserInterface(userID:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromUserInterface(userID,signalID,vars,options)
+    signalSystem.triggerEvent(signal)
   }
+  def executeRequestFromUserInterface(userID:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromUserInterface(userID,signalID,vars,options)
+    signalSystem.executeRequest(signal)
+  }
+  def initActionFromUserinterface(userID:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromUserInterface(userID,signalID,vars,options)
+    signalSystem.initAction(signal,options)
+  }
+  def triggerEventFromThirdPart(accessToken:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromThirdPart(accessToken,signalID,vars,options)
+    signalSystem.triggerEvent(signal)
+  }
+  def executeRequestFromThirdPart(accessToken:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromThirdPart(accessToken,signalID,vars,options)
+    signalSystem.executeRequest(signal)
+  }
+  def initActionFromThirdPart(accessToken:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+    val signal = initSignalFromThirdPart(accessToken,signalID,vars,options)
+    signalSystem.initAction(signal,options)
+  }
+  	  private def initSignalFromUserInterface(userID:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+	    val appID = Signal.FROMUSERINTERFACE
+	    Signal(signalID,userID,appID,vars)
+	  }
+	  private def initSignalFromThirdPart(accessToken:String,signalID:String,vars:Map[String,Seq[String]],options:Map[String,String])={
+	    val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
+	    Signal(signalID,userID,appID,vars)
+	  }
+//  def getUserAndFromByAccesstoken(accesstoken:String)={
+//    authCenter.getUserIDAppIDPair(accesstoken)
+//  }
+
+  
 }
 
 
 trait StubSignalSystem extends SignalSystem{
 
-	    def handleSignal(t:Signal):SignalResponse={
-	          new ObjectResponse("Stub")
-	    }
-	    def getHeadResponse(t:Signal):SignalResponse={
-	         new ObjectResponse("Stub")
-	    }
-
+	    def initAction(t:Signal,options:Map[String,String]):SignalResponse = null
+	    def triggerEvent(t:Signal)=null
+	    def executeRequest(t:Signal)=null
 }
 
 

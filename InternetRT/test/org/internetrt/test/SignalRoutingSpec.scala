@@ -24,7 +24,7 @@ class SignalRoutingSpec extends Specification with Mockito{
 //	      }
 //	    }.signalSystem.handleSignal(null) === null;
 	  }
-	  TestEnvironment.signalSystem.handleSignal(null) must beEqualTo(null)
+	  //TestEnvironment.signalSystem.handleSignal(null) must beEqualTo(null)
 	}
 	
 	object TestEnvironment extends InternetRuntime{
