@@ -36,6 +36,7 @@ object SiteInternetRuntime extends InternetRuntime{
 }
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl{
    object appPool extends StubAppPool
+   object routingResourcePool extends MemoryRoutingResourcePool
 }
 
 trait MemoryAuthCenter extends AuthCenterImpl{
@@ -49,7 +50,6 @@ trait MemorySignalSystem extends SignalSystemImpl{
   object workflowEngine extends WorkflowEngineImpl{
 	  object routingInstancePool extends StubRoutingInstancePool
   }
-  object routingResourcePool extends MemoryRoutingResourcePool
 }
 
 object CONSTS{

@@ -17,15 +17,16 @@ import org.internetrt.core.signalsystem.ObjectResponse
 import org.internetrt.core.model.RoutingInstance
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import org.internetrt.MemoryConfigurationSystem
+import org.internetrt.core.model.Application
 
 @RunWith(classOf[JUnitRunner])
 class SignalSpedification extends Specification with Mockito{ override def is =
     "This is a specification to check the signal dispatching works well"         ^
                                                                                 p^
-    "The normal signal should"                                                   ^
-      "[Function]notify the intereptors"                                     ! e1^
-      "[Safe]start with 'Hello'"                                             ! e2^
-      "[Performance]end with 'world'"                                        ! e3^
+    "Preparation"																^
+    	"""The application should registered as "appid" with secret "secret"  """  ! install1^
+    	"""The application2 should registered as "appid2" with secret "secret2"  """  ! install2^
                                                                                 p^
     "The sip type signal should"  ^
       "Given the sip request" ^ (request) ^
@@ -34,27 +35,37 @@ class SignalSpedification extends Specification with Mockito{ override def is =
       "Received the result" ^ (data) ^
       end
     
-    def e1 = "Hello world" must have size(11)
-    def e2 = "Hello world" must startWith("Hello")
-    def e3 = "Hello world" must endWith("world")
+
 	object TestEnvironment extends InternetRuntime{
 		object signalSystem extends{
 			val global = TestEnvironment.this
 		}with MemorySignalSystem
+		
 		object authCenter extends{
 			val global = TestEnvironment.this
 
 		}with MemoryAuthCenter
+		
+		object confSystem extends{
+			val global = TestEnvironment.this 
+		}with MemoryConfigurationSystem
+		
 		val ioManager= mock[IOManager]
-		val confSystem=mock[ConfigurationSystem]
 		
 	}
-
+    def install1 = {
+      TestEnvironment.confSystem.installApp(Application("appid","secret",null))
+	  success
+	}
+    def install2 = {
+      TestEnvironment.confSystem.installApp(Application("appid2","secret2",null))
+      success
+    }
 
 	object request extends Given[SignalResponse]{
 		def extract(text: String):SignalResponse = {
-		  val code = TestEnvironment.getAuthcodeForServerFlow("app","user","http")
-		  val accessToken = TestEnvironment.getAccessTokenByAuthtoken("app",code,"secret")
+		  val code = TestEnvironment.getAuthcodeForServerFlow("appid","user","http")
+		  val accessToken = TestEnvironment.getAccessTokenByAuthtoken("appid",code,"secret")
 		  TestEnvironment.initActionFromThirdPart(accessToken.value,"signalname",null,null) // head response return the routing
 
 		}
@@ -68,9 +79,9 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 	}
 	object requesttoclient extends When[(String,String),String]{
 	  def extract(p:(String,String), text:String) = {
-	    val authcode = TestEnvironment.getAuthcodeForActionFlow("app2","sec2",p._2);
-	    val accesstoken = TestEnvironment.getAccessTokenByAuthtoken("app2",authcode,"sec2");
-	    TestEnvironment.getUserIDByAccessToken(accesstoken.value,"sec2")// execute return the routing instace
+	    val authcode = TestEnvironment.getAuthcodeForActionFlow("appid2","secret2",p._2);
+	    val accesstoken = TestEnvironment.getAccessTokenByAuthtoken("appid2",authcode,"secret2");
+	    TestEnvironment.getUserIDByAccessToken(accesstoken.value,"secret2")// execute return the routing instace
 	  }
 	}
 	object data extends Then[String]{

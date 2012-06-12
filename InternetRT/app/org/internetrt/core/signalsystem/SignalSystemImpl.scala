@@ -6,15 +6,17 @@ import org.internetrt.core.model.RoutingInstance
 
 
   abstract class SignalSystemImpl extends SignalSystem{
+  
+  import global.confSystem
     
   val workflowEngine:WorkflowEngine
-  val routingResourcePool:RoutingResourcePool
+  //val routingResourcePool:RoutingResourcePool
   
     //private def getRoutingInstance(s:Signal) = workflowEngine.getRoutingInstance(s)
     
     private def getRouting(s:Signal)={
       val signalID = s.from+s.user+s.id
-      routingResourcePool.getRoutingsBySignal(signalID)
+      confSystem.getRoutingsBySignal(signalID)
     }
     
     def initAction(s:Signal,options:Map[String,String]):SignalResponse ={
