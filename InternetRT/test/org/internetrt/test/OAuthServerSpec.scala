@@ -13,11 +13,19 @@ import org.internetrt.core.security._
 import org.internetrt.core.configuration._
 import org.internetrt.MemoryAuthCenter
 import org.specs2.execute.Result
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
+import org.internetrt.persistent.AppPool
+import org.internetrt.persistent.StubInternalUserPool
+import org.internetrt.persistent.StubAccessTokenPool
+import org.internetrt.persistent.StubAuthCodePool
 
+@RunWith(classOf[JUnitRunner])
 class OAuthServerSpec extends Specification with Mockito{override def is =
-    "This is a specification to check the oauth server works well"         ^
+    """This is a specification to check the oauth server works well"""         ^
                                                                                 p^
-//    "The normal signal should"                                                   ^
+    "Preparation"																^
+    	"""The application should registered as "appid" with secret "secret"  """  ! install^
 //      "[Function]notify the intereptors"                                     ! e1^
 //      "[Safe]start with 'Hello'"                                             ! e2^
 //      "[Performance]end with 'world'"                                        ! e3^
@@ -26,8 +34,12 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
       "Get the auth code first with appID:${appid} and userID:${userid}" ^ (auth) ^
       "ask access code with auth code and appID:${appid},appSec:${secret}" ^ (access) ^
       "access resource with access code" ^ (request) ^
-      end
+      end ^
+      																			p^
+     "Verify the Preparation"													! verify
+     
     
+   
 //    def e1 = "Hello world" must have size(11)
 //    def e2 = "Hello world" must startWith("Hello")
 //    def e3 = "Hello world" must endWith("world")
@@ -39,17 +51,32 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 		object authCenter extends{
 			val global = TestEnvironment.this
 
-		}with MemoryAuthCenter{
-		  			
-			override def getUserIDAppIDPair(accessToken:String):(String,String)={
-			  super.getUserIDAppIDPair(accessToken)
-			}
+		}with AuthCenterImpl{
+		  object internalUserPool extends StubInternalUserPool
+		  object accessTokenPool extends StubAccessTokenPool
+		  object authCodePool extends StubAuthCodePool 
+		  
+		  override def getUserIDAppIDPair(accessToken:String):(String,String)={
+		    super.getUserIDAppIDPair(accessToken)
+		  }
 		}
+		  			
 		
 		val ioManager= mock[IOManager]
 		val confSystem=mock[ConfigurationSystem]
 		
 	}
+	
+	def install = {
+	  val confSystem = TestEnvironment.confSystem
+	  confSystem.getAppSecretByID("appid") returns "secret"
+	  success
+	}
+	def verify ={
+	  val confSystem = TestEnvironment.confSystem
+	  there was atLeast(1) (confSystem).getAppSecretByID("appid") 
+	}
+
 	object auth extends Given[String]{
 		def extract(text: String):String =	{
 		  val (a,u)= extract2(text)
@@ -60,14 +87,15 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 	object access extends When[String,(AccessToken,String)]{
 		def extract(p:String, text:String) = {
 		  val (a,s) = extract2(text)
-		  (TestEnvironment.getAccessTokenByAuthtoken(a,p,s),s) //TODO secret is not installed??!
+		  (TestEnvironment.getAccessTokenByAuthtoken(a,p,s),s) 
 		}
 	}
 	object request extends Then[(AccessToken,String)]{
 	  def extract(p:(AccessToken,String), text:String):Result = {
-	    val (app,user) = TestEnvironment.authCenter.getUserIDAppIDPair(p._1.value);
+	    
+	    val (user,app) = TestEnvironment.authCenter.getUserIDAppIDPair(p._1.value);
 	    val uid = TestEnvironment.getUserIDByAccessToken(p._1.value,p._2)
-	    app == "appid" and user == "userid" and user == uid
+	    app === "appid" and user === "userid" and user === uid
 	  
 	  }
 	}

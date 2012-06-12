@@ -4,12 +4,8 @@ import org.internetrt.core.model.Application
 
 
 
-  trait ConfigurationSystem{
+trait ConfigurationSystem{
     def confirmRouting(userID:String,app:String,r:Routing)
     def installApp(app:Application)
-  }
-
-trait StubConfigurationSystem extends ConfigurationSystem{
-    def confirmRouting(userID:String,app:String,r:Routing){}
-    def installApp(app:Application)  {}
+    def getAppSecretByID(appID:String):String
 }

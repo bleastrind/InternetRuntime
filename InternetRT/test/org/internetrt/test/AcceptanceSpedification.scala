@@ -15,7 +15,10 @@ import org.internetrt.MemoryAuthCenter
 import org.internetrt.core.signalsystem.ObjectResponse
 import org.internetrt.core.signalsystem.ObjectResponse
 import org.internetrt.core.model.RoutingInstance
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class SignalSpedification extends Specification with Mockito{ override def is =
     "This is a specification to check the signal dispatching works well"         ^
                                                                                 p^
@@ -25,10 +28,10 @@ class SignalSpedification extends Specification with Mockito{ override def is =
       "[Performance]end with 'world'"                                        ! e3^
                                                                                 p^
     "The sip type signal should"  ^
-      "Given the sip request" ^ Step(request) ^
-      "Receive a sip response and sendTo another client" ^ Step(sip) ^
-      "Ask accesstoken and userID from routinginstance id" ^ Step(requesttoclient) ^
-      "Received the result" ^ Step(data) ^
+      "Given the sip request" ^ (request) ^
+      "Receive a sip response and sendTo another client" ^ (sip) ^
+      "Ask accesstoken and userID from routinginstance id" ^ (requesttoclient) ^
+      "Received the result" ^ (data) ^
       end
     
     def e1 = "Hello world" must have size(11)

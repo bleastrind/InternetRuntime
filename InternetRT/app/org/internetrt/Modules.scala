@@ -4,13 +4,13 @@ import org.internetrt.core.security._
 import org.internetrt.persistent._
 import org.internetrt.core.io.IOManagerImpl
 import org.internetrt.core.configuration.ConfigurationSystem
-import org.internetrt.core.configuration.StubConfigurationSystem
 import org.internetrt.core.signalsystem.SignalSystemImpl
 import org.internetrt.core.signalsystem.workflow.WorkflowEngine
 import org.internetrt.core.model.Routing
 import org.internetrt.core.model.RoutingInstance
 import org.internetrt.core.signalsystem.Signal
 import org.internetrt.core.signalsystem.workflow.WorkflowEngineImpl
+import org.internetrt.core.configuration.ConfigurationSystemImpl
 
 
 /**
@@ -30,14 +30,19 @@ object SiteInternetRuntime extends InternetRuntime{
 	  val global = SiteInternetRuntime.this 
 	}with IOManagerImpl
 	
-	object confSystem extends StubConfigurationSystem
+	object confSystem extends{
+	  val global = SiteInternetRuntime.this 
+	}with MemoryConfigurationSystem
+}
+trait MemoryConfigurationSystem extends ConfigurationSystemImpl{
+   object appPool extends StubAppPool
 }
 
 trait MemoryAuthCenter extends AuthCenterImpl{
   object internalUserPool extends StubInternalUserPool
   object accessTokenPool extends StubAccessTokenPool
   object authCodePool extends StubAuthCodePool 
-  object appPool extends StubAppPool
+
 }
 
 trait MemorySignalSystem extends SignalSystemImpl{

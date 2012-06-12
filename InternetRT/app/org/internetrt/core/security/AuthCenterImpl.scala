@@ -12,11 +12,11 @@ abstract class AuthCenterImpl extends AnyRef
   with AuthCenter{
 	
   import global.signalSystem
+  import global.confSystem
   
   val internalUserPool:InternalUserPool
   val accessTokenPool:AccessTokenPool
   val authCodePool:AuthCodePool
-  val appPool:AppPool
   
   def register(username:String,password:String)={
     internalUserPool.get(username) match{
@@ -42,7 +42,8 @@ abstract class AuthCenterImpl extends AnyRef
   }
   
   def checkApp(appID:String,appSecret:String):Unit={
-    if( appPool.getAppSecretByID(appID) != appSecret )
+    val realAppsecret = confSystem.getAppSecretByID(appID)
+    if( realAppsecret != appSecret )
       throw new AuthDelayException()
   }
   
@@ -84,7 +85,7 @@ abstract class AuthCenterImpl extends AnyRef
   }
   
   def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
-	  accessTokenPool.get(accessToken) match{
+	accessTokenPool.get(accessToken) match{
       case Some((token,appID,userID))=>{
           checkApp(appID, appSecret)
           userID
