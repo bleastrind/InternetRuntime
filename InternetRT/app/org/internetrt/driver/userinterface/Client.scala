@@ -22,10 +22,11 @@ import java.util.concurrent.TimeoutException
 import akka.pattern.AskTimeoutException
 import java.util.UUID
 import scala.collection.mutable.ListBuffer
-import org.internetrt.driver.clientmanager.ClientDriver
+import org.internetrt.core.io.userinterface.ClientDriver
 import org.internetrt.CONSTS
-import org.internetrt.driver.clientmanager.ClientsManager
-import org.internetrt.driver.clientmanager.ClientStatus
+import org.internetrt.core.io.userinterface.ClientsManager
+import org.internetrt.core.io.userinterface.ClientStatus
+import org.internetrt.core.io.userinterface.ClientDriver
 
 object Client extends Controller {
   var clients = Map.empty[String, PushEnumerator[String]]

@@ -4,6 +4,7 @@ import org.internetrt.core.signalsystem.Signal
 import org.internetrt.core.model.Routing
 import org.internetrt.core.model.RoutingInstance
 import org.internetrt.persistent.RoutingInstancePool
+import java.util.UUID
 
 abstract class WorkflowEngineImpl extends WorkflowEngine {
 
@@ -22,6 +23,7 @@ abstract class WorkflowEngineImpl extends WorkflowEngine {
  }
 
   def createInstanceByRouting(userID:String ,routings:Seq[Routing]):RoutingInstance = {
+    val workflowID = UUID.randomUUID().toString()
     val xmlrouting = 
     <Routing>
     	<signal id="1" runat="client">
@@ -56,7 +58,7 @@ abstract class WorkflowEngineImpl extends WorkflowEngine {
 	</Routing>
     val xml = 
     <RoutingInstance>
-    	<id>dsafs </id>
+    	<id>{ workflowID } </id>
     	<signal id="1" runat="client">
          <from>client</from>
          <user>u</user>

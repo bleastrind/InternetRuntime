@@ -6,10 +6,13 @@ import org.internetrt.persistent.RoutingResourcePool
 abstract class ConfigurationSystemImpl extends AnyRef 
   with ConfigurationSystem{
   
+  import global.ioManager
+  
   val appPool:AppPool
   val routingResourcePool:RoutingResourcePool
   
-  def confirmRouting(userID:String,app:String,r:Routing){
+  def confirmRouting(userID:String,r:Routing){
+    //val requests = r.xml \ "requests"
     routingResourcePool.saveRouting(r)
   }
   def getRoutingsBySignal(signalID:String)={

@@ -5,7 +5,8 @@ import org.internetrt.core.signalsystem.ObjectResponse
 import java.util.UUID
 
 //TODO provide a tool set to help retrieve&consume the information in the structure
-class Routing(xml:String) {
+case class Routing(xml:scala.xml.Elem) {
+  
   //def getNextOutput(state:String, input:Signal):SignalResponse = new ObjectResponse("Stub")
 }
 

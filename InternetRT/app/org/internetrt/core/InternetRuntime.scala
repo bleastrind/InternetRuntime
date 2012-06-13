@@ -9,6 +9,10 @@ import org.internetrt.core.security.AuthCenter
 import org.internetrt.core.signalsystem.SignalSystem
 import org.internetrt.core.io.IOManager
 import org.internetrt.core.configuration.ConfigurationSystem
+import org.internetrt.core.model.Application
+import java.util.UUID
+import scala.xml.XML
+import org.internetrt.core.model.Routing
 
 
 /**
@@ -48,14 +52,6 @@ abstract class InternetRuntime{
   def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
     authCenter.getUserIDByAccessToken(accessToken,appSecret)
   }
-	  
-  
-  def register(username:String,password:String):String={
-    if (authCenter.register(username,password)) "success" else "failed"
-  }
-  def login(username:String,password:String):String={
-      authCenter.login(username,password)
-  }  
   
   /**************************************************************************
    * ---------------------------- signal processing-------------------------*
@@ -104,8 +100,19 @@ abstract class InternetRuntime{
 //  def getUserAndFromByAccesstoken(accesstoken:String)={
 //    authCenter.getUserIDAppIDPair(accesstoken)
 //  }
-
+  /*************************************************************************
+  * ---------------------------- configuration panel-----------------------*
+  *************************************************************************/ 
+  def installApplication(userID:String,secret:String,xml:String){
+    val id = UUID.randomUUID().toString()
+    confSystem.installApp(Application(id,secret,XML.load(xml)))
+    val s = <b/>
+    val c = <a>{s}</a> 
+  }
   
+  def confirmRouting(userID:String,xml:String)={
+    confSystem.confirmRouting(userID,Routing(scala.xml.XML.load(xml)))
+  }
 }
 
 

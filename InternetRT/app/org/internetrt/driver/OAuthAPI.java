@@ -11,7 +11,7 @@ import play.mvc.Http.Request;
 import play.mvc.Result;
 import play.mvc.Controller;
 
-public class API extends Controller {
+public class OAuthAPI extends Controller {
 	
 	/**
 	 * The API for Web Server Flow
@@ -47,23 +47,4 @@ public class API extends Controller {
 	}
 	
 	
-	public static Result register(){
-		String username = request().queryString().get("username")[0];
-		String password = request().queryString().get("password")[0];
-		return ok(SiteInternetRuntime.register(username,password));
-	}
-	public static Result login(){
-		String username = request().queryString().get("username")[0];
-		String password = request().queryString().get("password")[0];
-		
-		try{
-			String uid = SiteInternetRuntime.login(username,password);
-
-			session().put(CONSTS.SESSIONUID(), uid);
-			return ok();
-		}catch(Exception e){
-			return ok(e.getMessage());
-		}
-		
-	}
 }
