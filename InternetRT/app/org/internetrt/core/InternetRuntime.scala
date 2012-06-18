@@ -13,6 +13,7 @@ import org.internetrt.core.model.Application
 import java.util.UUID
 import scala.xml.XML
 import org.internetrt.core.model.Routing
+import org.internetrt.core.security.AccessControlSystem
 
 
 /**
@@ -29,6 +30,7 @@ abstract class InternetRuntime{
   *************************************************************************/ 
   val signalSystem:SignalSystem
   val authCenter:AuthCenter
+  val aclSystem:AccessControlSystem
   val ioManager:IOManager
   val confSystem:ConfigurationSystem
   
@@ -112,6 +114,16 @@ abstract class InternetRuntime{
   
   def confirmRouting(userID:String,xml:String)={
     confSystem.confirmRouting(userID,Routing(scala.xml.XML.load(xml)))
+  }
+  
+  def getApplications(accessToken:String)={
+    val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
+    aclSystem.checkAccess(userID,appID,"getApplications");
+    confSystem.getAppIDs(userID);
+  }
+  
+  def getApplicationDetail(id:String)={
+    confSystem.getApp(id)
   }
 }
 

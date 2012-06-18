@@ -1,8 +1,6 @@
 package org.internetrt.driver;
 
 
-import javax.security.sasl.AuthenticationException;
-
 import org.internetrt.*;
 import org.internetrt.core.security.*;
 import org.internetrt.core.signalsystem.SignalResponse;

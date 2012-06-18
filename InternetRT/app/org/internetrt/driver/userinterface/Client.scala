@@ -1,4 +1,4 @@
-package org.internetrt.driver
+package org.internetrt.driver.userinterface
 import play.api.mvc._
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.Comet

@@ -33,10 +33,19 @@ object SiteInternetRuntime extends InternetRuntime {
   object confSystem extends {
     val global = SiteInternetRuntime.this
   } with MemoryConfigurationSystem
+  
+  object aclSystem extends {
+    val global = SiteInternetRuntime.this
+  } with AccessControlSystem{
+    def checkAccess(userID:String,appID:String,action:String) = true
+  }
 }
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl {
   object appPool extends StubAppPool
   object routingResourcePool extends MemoryRoutingResourcePool
+  object userAppRelationPool extends UserAppRelationPool{
+    def getAppIDsByUserID(id:String) = Seq.empty
+  }
 }
 
 trait MemoryAuthCenter extends AuthCenterImpl {
