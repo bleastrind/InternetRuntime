@@ -11,10 +11,10 @@ trait ConfigurationSystem{
 	def confirmRouting(userID:String,r:Routing)
     def getRoutingsBySignal(signalID:String):Seq[Routing]
 	
-    def installApp(app:Application)
+    def installApp(userID:String,app:Application)
 	
 	def getAppIDs(userID:String):Seq[String]
-	def getApp(id:String):Application
+	def getApp(userID:String ,id:String):Application
 	
-    def getAppSecretByID(appID:String):String
+    def getAppSecretByID(userID:String,appID:String):String
 }
