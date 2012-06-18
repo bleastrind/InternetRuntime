@@ -122,15 +122,10 @@ abstract class InternetRuntime{
     confSystem.getAppIDs(userID);
   }
   
-<<<<<<< HEAD
   def getApplicationDetail(id:String, accessToken: String)={
-    confSystem.getApp(id)
-=======
-  def getApplicationDetail(accessToken:String,id:String)={
     val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
     aclSystem.checkAccess(userID,appID,"getApplications");
     confSystem.getApp(userID,id)
->>>>>>> e73465608166fd6d49766fa2a24f96b3f421d3e3
   }
 }
 

@@ -38,6 +38,7 @@ object SiteInternetRuntime extends InternetRuntime {
     val global = SiteInternetRuntime.this
   } with AccessControlSystem{
     def checkAccess(userID:String,appID:String,action:String) = true
+	def confirmAccess(userID:String, appID:String, actions:Seq[String]){}
   }
 }
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl {
