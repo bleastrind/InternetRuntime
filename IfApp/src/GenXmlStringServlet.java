@@ -1,25 +1,23 @@
-import java.awt.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.omg.CORBA.portable.ApplicationException;
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 
-public class accessTokenServlet extends HttpServlet {
+public class GenXmlStringServlet extends HttpServlet {
 
 	/**
 	 * Constructor of the object.
 	 */
-	public accessTokenServlet() {
+	public GenXmlStringServlet() {
 		super();
 	}
 
@@ -43,21 +41,42 @@ public class accessTokenServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out
-				.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-		out.println("<HTML>");
-		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
-		out.println("  <BODY>");
-		out.print("    This is ");
-		out.print(this.getClass());
-		out.println(", using the GET method");
-		out.println("  </BODY>");
-		out.println("</HTML>");
-		out.flush();
-		out.close();
+		
+		String fileName = request.getParameter("fileName");
+		System.out.println("fileName"+fileName);
+		
+		StringBuilder fileUri = new StringBuilder();
+		fileUri.append("E://workspace/IfApp/WebRoot/ApplicationXmls/");
+		fileUri.append(fileName);
+		
+		System.out.println("FILEURI"+fileUri.toString());
+		
+		File file = new File(fileUri.toString());
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String temString = null;
+			StringBuilder resultString = new StringBuilder();
+			while((temString = reader.readLine())!=null){
+				resultString.append(temString);
+			}
+			response.setContentType("text/html");
+			PrintWriter out = response.getWriter();
+			out.write(resultString.toString());
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}finally{
+			if(reader !=null){
+				try {
+					reader.close();
+				} catch (IOException e1) {
+					// TODO: handle exception
+				}
+			}
+		}
 	}
 
 	/**
@@ -73,36 +92,18 @@ public class accessTokenServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String accessToken = request.getParameter("accessToken");
-		InternetRuntime rt = new InternetRuntime();
-		ArrayList<String> appXmls  = rt.getApps(accessToken);
-		
-		JSONArray applications= new JSONArray();
-		JSONObject appsObject = new JSONObject();
-		
-		for(String str: appXmls)
-		{
-			Application application  = AppXmlParser.createApplication(str);
-			
-			JSONObject appObject = AppXmlParser.ApplicationToJson(application);
-			
-			System.out.println("APPLICATIONJSON"+appObject.toString());
-			
-			applications.put(appObject);
-		}
-		
-		try {
-			appsObject.put("applications", applications);
-		} catch (JSONException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		
-		String result = appsObject.toString();
-		System.out.println(result);
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.write(result);
+		out
+				.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+		out.println("<HTML>");
+		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
+		out.println("  <BODY>");
+		out.print("    This is ");
+		out.print(this.getClass());
+		out.println(", using the POST method");
+		out.println("  </BODY>");
+		out.println("</HTML>");
 		out.flush();
 		out.close();
 	}
