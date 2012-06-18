@@ -105,11 +105,11 @@ abstract class InternetRuntime{
   /*************************************************************************
   * ---------------------------- configuration panel-----------------------*
   *************************************************************************/ 
-  def installApplication(userID:String,secret:String,xml:String){
+  def installApplication(userID:String,secret:String,xml:String)={
+    
     val id = UUID.randomUUID().toString()
-    confSystem.installApp(Application(id,secret,XML.load(xml)))
-    val s = <b/>
-    val c = <a>{s}</a> 
+    confSystem.installApp(userID, Application(id,secret,XML.load(xml)))
+
   }
   
   def confirmRouting(userID:String,xml:String)={
@@ -122,8 +122,15 @@ abstract class InternetRuntime{
     confSystem.getAppIDs(userID);
   }
   
+<<<<<<< HEAD
   def getApplicationDetail(id:String, accessToken: String)={
     confSystem.getApp(id)
+=======
+  def getApplicationDetail(accessToken:String,id:String)={
+    val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
+    aclSystem.checkAccess(userID,appID,"getApplications");
+    confSystem.getApp(userID,id)
+>>>>>>> e73465608166fd6d49766fa2a24f96b3f421d3e3
   }
 }
 

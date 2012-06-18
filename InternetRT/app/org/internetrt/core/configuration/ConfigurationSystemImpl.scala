@@ -11,7 +11,6 @@ abstract class ConfigurationSystemImpl extends AnyRef
   
   val appPool:AppPool
   val routingResourcePool:RoutingResourcePool
-  val userAppRelationPool:UserAppRelationPool
   
   def confirmRouting(userID:String,r:Routing){
     //val requests = r.xml \ "requests"
@@ -21,18 +20,18 @@ abstract class ConfigurationSystemImpl extends AnyRef
     routingResourcePool.getRoutingsBySignal(signalID)
   }
   
-  def installApp(app:Application)={
-    appPool.installApplication(app.id,app)
+  def installApp(userID:String, app:Application)={
+    appPool.installApplication(userID, app.id,app)
   }
 
   def getAppIDs(userID:String):Seq[String]={
-    userAppRelationPool.getAppIDsByUserID(userID)
+    appPool.getAppIDsByUserID(userID)
   }
-  def getApp(id:String):Application ={
-    appPool.getApp(id)
+  def getApp(userID:String, id:String):Application ={
+    appPool.getApp(userID, id)
   }
 	
-  def getAppSecretByID(appID:String)={
-    appPool.getAppSecretByID(appID)
+  def getAppSecretByID(userID:String,appID:String)={
+    appPool.getAppSecretByID(userID,appID)
   }
 }

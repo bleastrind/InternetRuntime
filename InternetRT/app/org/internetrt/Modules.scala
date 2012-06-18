@@ -43,9 +43,6 @@ object SiteInternetRuntime extends InternetRuntime {
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl {
   object appPool extends StubAppPool
   object routingResourcePool extends MemoryRoutingResourcePool
-  object userAppRelationPool extends UserAppRelationPool{
-    def getAppIDsByUserID(id:String) = Seq.empty
-  }
 }
 
 trait MemoryAuthCenter extends AuthCenterImpl {
@@ -60,6 +57,8 @@ trait MemorySignalSystem extends SignalSystemImpl {
     object routingInstancePool extends StubRoutingInstancePool
   }
 }
+
+
 
 object SiteUserInterface extends UserInterface {
   val authCenter = SiteInternetRuntime.authCenter
