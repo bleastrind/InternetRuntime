@@ -20,3 +20,6 @@ GET		/clients/longpolling	org.internetrt.driver.userinterface.Client.longpolling
 GET		/clients/response		org.internetrt.driver.userinterface.Client.response
 GET		/clients/test				org.internetrt.driver.userinterface.Client.test
 
+#Configurition API 
+GET		/config/apps                           org.internetrt.driver.ConfigController.appsList
+GET		/config/apps/:id                       org.internetrt.driver.ConfigController.appDetail(id: String)

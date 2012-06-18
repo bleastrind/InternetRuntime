@@ -122,7 +122,7 @@ abstract class InternetRuntime{
     confSystem.getAppIDs(userID);
   }
   
-  def getApplicationDetail(id:String)={
+  def getApplicationDetail(id:String, accessToken: String)={
     confSystem.getApp(id)
   }
 }
