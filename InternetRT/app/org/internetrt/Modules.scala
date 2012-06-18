@@ -36,9 +36,7 @@ object SiteInternetRuntime extends InternetRuntime {
   
   object aclSystem extends {
     val global = SiteInternetRuntime.this
-  } with AccessControlSystem{
-    def checkAccess(userID:String,appID:String,action:String) = true
-  }
+  } with MemoryAccessControlSystem
 }
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl {
   object appPool extends StubAppPool
@@ -57,7 +55,9 @@ trait MemorySignalSystem extends SignalSystemImpl {
     object routingInstancePool extends StubRoutingInstancePool
   }
 }
-
+trait MemoryAccessControlSystem extends AccessControlSystemImpl{
+  object applicationAccessPool extends StubApplicationAccessPool
+}
 
 
 object SiteUserInterface extends UserInterface {

@@ -108,7 +108,10 @@ abstract class InternetRuntime{
   def installApplication(userID:String,secret:String,xml:String)={
     
     val id = UUID.randomUUID().toString()
-    confSystem.installApp(userID, Application(id,secret,XML.load(xml)))
+    
+    val app = Application(id,secret,XML.load(xml))
+    aclSystem.confirmAccess(userID,id, Seq("getApplications"))
+    confSystem.installApp(userID, app)
 
   }
   
@@ -118,8 +121,10 @@ abstract class InternetRuntime{
   
   def getApplications(accessToken:String)={
     val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
-    aclSystem.checkAccess(userID,appID,"getApplications");
-    confSystem.getAppIDs(userID);
+    if(aclSystem.checkAccess(userID,appID,"getApplications"))
+    	confSystem.getAppIDs(userID);
+    else
+      null
   }
   
   def getApplicationDetail(accessToken:String,id:String)={

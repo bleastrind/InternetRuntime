@@ -2,7 +2,6 @@ package org.internetrt.core.configuration
 import org.internetrt.persistent.AppPool
 import org.internetrt.core.model._
 import org.internetrt.persistent.RoutingResourcePool
-import org.internetrt.persistent.UserAppRelationPool
 
 abstract class ConfigurationSystemImpl extends AnyRef 
   with ConfigurationSystem{
