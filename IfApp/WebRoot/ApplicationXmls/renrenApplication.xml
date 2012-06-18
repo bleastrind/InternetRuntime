@@ -2,6 +2,7 @@
 	<Application>
 		<Name>renren</Name>
 		<AppID>nceifqfafas</AppID>
+		<AppSecrect></AppSecrect>
 		<Signals>
 			<Request>
 				<Signalname>/signal/share</Signalname>

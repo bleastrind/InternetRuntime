@@ -41,8 +41,8 @@ abstract class AuthCenterImpl extends AnyRef
     }
   }
   
-  def checkApp(appID:String,appSecret:String):Unit={
-    val realAppsecret = confSystem.getAppSecretByID(appID)
+  def checkApp(userID:String, appID:String,appSecret:String):Unit={
+    val realAppsecret = confSystem.getAppSecretByID(userID,appID)
     if( realAppsecret != appSecret )
       throw new AuthDelayException()
   }
@@ -59,7 +59,7 @@ abstract class AuthCenterImpl extends AnyRef
      };
      val userID = routingInstance.userID;
      
-     checkApp(appID,appSecret)
+     checkApp(userID, appID,appSecret)
      
      genAuthCode(appID,userID)
   }
@@ -67,12 +67,14 @@ abstract class AuthCenterImpl extends AnyRef
 	   * code can be auth token 
 	   */
   def genAccessTokenByAuthToken(authtoken:String,appID:String,appSecret:String):AccessToken ={
-    
-    //Make sure the app send the request it self
-    checkApp(appID, appSecret)
+
     
     authCodePool.get(authtoken) match{
       case Some((appID,userID)) =>{
+	      
+		//Make sure the app send the request it self
+		checkApp(userID, appID, appSecret)
+	
         val time = new Date()
         time.setTime(time.getTime()+10000) //expire time
         val accessToken = AccessToken(UUID.randomUUID().toString(),time ,null)
@@ -87,7 +89,7 @@ abstract class AuthCenterImpl extends AnyRef
   def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
 	accessTokenPool.get(accessToken) match{
       case Some((token,appID,userID))=>{
-          checkApp(appID, appSecret)
+          checkApp(userID, appID, appSecret)
           userID
       }
       case None => null

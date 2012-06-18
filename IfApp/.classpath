@@ -15,7 +15,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/httpcore-ab-4.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/httpcore-nio-4.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/httpmime-4.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

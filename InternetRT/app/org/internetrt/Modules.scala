@@ -37,6 +37,7 @@ object SiteInternetRuntime extends InternetRuntime {
   object aclSystem extends {
     val global = SiteInternetRuntime.this
   } with MemoryAccessControlSystem
+
 }
 trait MemoryConfigurationSystem extends ConfigurationSystemImpl {
   object appPool extends StubAppPool
