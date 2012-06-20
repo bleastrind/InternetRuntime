@@ -24,6 +24,10 @@ abstract class WorkflowEngineImpl extends WorkflowEngine {
 
   def createInstanceByRouting(userID:String ,routings:Seq[Routing]):RoutingInstance = {
     val workflowID = UUID.randomUUID().toString()
+    
+    val signalListeners = routings.map(r => r.xml \\ "signalListener")
+    val eventListeners = signalListeners.filter(node => node \ "@type" == "request")
+    
     val xmlrouting = 
     <Routing>
     	<signal id="1" runat="client">
