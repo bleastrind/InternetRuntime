@@ -54,11 +54,11 @@ class UserInterfaceSpec extends Specification with Mockito {
       val global = TestEnvironment.this
     } with IOManagerImpl
     val confSystem = mock[ConfigurationSystem]
-
+    val aclSystem = mock[AccessControlSystem]
   }
 
   object TestUserInterface extends UserInterface {
-    val authCenter = TestEnvironment.authCenter
+    val global = TestEnvironment
   }
   def register = {
     TestUserInterface.register("user", "pass") match {

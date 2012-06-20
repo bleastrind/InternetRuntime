@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import org.internetrt.MemoryConfigurationSystem
 import org.internetrt.core.model.Application
+import org.internetrt.core.security.AccessControlSystem
 
 @RunWith(classOf[JUnitRunner])
 class SignalSpedification extends Specification with Mockito{ override def is =
@@ -51,14 +52,16 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 		}with MemoryConfigurationSystem
 		
 		val ioManager= mock[IOManager]
-		
+		val aclSystem = mock[AccessControlSystem]
 	}
     def install1 = {
-      TestEnvironment.confSystem.installApp(Application("appid","secret",null))
+     // System.out.println((<secret>secret</secret> \\ "secret").text)
+      
+      TestEnvironment.confSystem.installApp("user",Application("appid", <secret>secret</secret>))
 	  success
 	}
     def install2 = {
-      TestEnvironment.confSystem.installApp(Application("appid2","secret2",null))
+      TestEnvironment.confSystem.installApp("user",Application("appid2", <secret>secret2</secret>))
       success
     }
 
@@ -81,7 +84,7 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 	  def extract(p:(String,String), text:String) = {
 	    val authcode = TestEnvironment.getAuthcodeForActionFlow("appid2","secret2",p._2);
 	    val accesstoken = TestEnvironment.getAccessTokenByAuthtoken("appid2",authcode,"secret2");
-	    TestEnvironment.getUserIDByAccessToken(accesstoken.value,"secret2")// execute return the routing instace
+	    TestEnvironment.getUserIDByAccessToken(accesstoken.value)// execute return the routing instace
 	  }
 	}
 	object data extends Then[String]{

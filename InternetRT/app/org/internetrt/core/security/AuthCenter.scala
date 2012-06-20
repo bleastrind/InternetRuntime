@@ -37,9 +37,9 @@ case class AccessToken(value:String,expire:Date,refresh:String);
 	  def genAccessTokenByAuthToken(authtoken:String,appID:String,appSecret:String):AccessToken
 	  
 	  /**
-	   * get userID by accessToken , app should provide it's secret s.t. only it can get the userid by itself's accesstoken
+	   * get userID by accessToken
 	   */
-	  def getUserIDByAccessToken(accessToken:String,appSecret:String):String
+	  def getUserIDByAccessToken(accessToken:String):String
 	  /**
 	   * This part is only for internal use
 	   */

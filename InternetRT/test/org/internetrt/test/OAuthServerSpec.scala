@@ -61,7 +61,7 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 		  }
 		}
 		  			
-		
+		val aclSystem = mock[AccessControlSystem]
 		val ioManager= mock[IOManager]
 		val confSystem=mock[ConfigurationSystem]
 		
@@ -69,12 +69,12 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 	
 	def install = {
 	  val confSystem = TestEnvironment.confSystem
-	  confSystem.getAppSecretByID("appid") returns "secret"
+	  confSystem.getAppSecretByID("userid","appid") returns "secret"
 	  success
 	}
 	def verify ={
 	  val confSystem = TestEnvironment.confSystem
-	  there was atLeast(1) (confSystem).getAppSecretByID("appid") 
+	  there was atLeast(1) (confSystem).getAppSecretByID("userid","appid") 
 	}
 
 	object auth extends Given[String]{
@@ -94,7 +94,7 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 	  def extract(p:(AccessToken,String), text:String):Result = {
 	    
 	    val (user,app) = TestEnvironment.authCenter.getUserIDAppIDPair(p._1.value);
-	    val uid = TestEnvironment.getUserIDByAccessToken(p._1.value,p._2)
+	    val uid = TestEnvironment.getUserIDByAccessToken(p._1.value)
 	    app === "appid" and user === "userid" and user === uid
 	  
 	  }

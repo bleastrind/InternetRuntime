@@ -86,10 +86,9 @@ abstract class AuthCenterImpl extends AnyRef
     }
   }
   
-  def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
+  def getUserIDByAccessToken(accessToken:String):String = {
 	accessTokenPool.get(accessToken) match{
       case Some((token,appID,userID))=>{
-          checkApp(userID, appID, appSecret)
           userID
       }
       case None => null

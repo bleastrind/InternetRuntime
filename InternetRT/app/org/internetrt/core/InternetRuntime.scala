@@ -51,8 +51,8 @@ abstract class InternetRuntime{
   def getAccessTokenByAuthtoken(appID:String,authtoken:String,appSecret:String):AccessToken={
     authCenter.genAccessTokenByAuthToken(authtoken,appID,appSecret)
   }
-  def getUserIDByAccessToken(accessToken:String,appSecret:String):String = {
-    authCenter.getUserIDByAccessToken(accessToken,appSecret)
+  def getUserIDByAccessToken(accessToken:String):String = {
+    authCenter.getUserIDByAccessToken(accessToken)
   }
   
   /**************************************************************************
@@ -105,14 +105,19 @@ abstract class InternetRuntime{
   /*************************************************************************
   * ---------------------------- configuration panel-----------------------*
   *************************************************************************/ 
-  def installApplication(userID:String,secret:String,xml:String)={
+  def installApplication(accessToken:String,xml:String)={
+    val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
     
-    val id = UUID.randomUUID().toString()
-    
-    val app = Application(id,secret,XML.load(xml))
-    aclSystem.confirmAccess(userID,id, Seq("getApplications"))
-    confSystem.installApp(userID, app)
-
+    if(aclSystem.isRoot(userID,appID)){
+	    val id = UUID.randomUUID().toString()
+	    
+	    val app = Application(id,XML.loadString(xml))
+	    aclSystem.grantAccess(userID,id, Seq("getApplications"),false)
+	    confSystem.installApp(userID, app)
+	    
+	    id
+    }else
+    	null
   }
   
   def confirmRouting(userID:String,xml:String)={

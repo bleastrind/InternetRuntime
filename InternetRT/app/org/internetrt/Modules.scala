@@ -62,7 +62,7 @@ trait MemoryAccessControlSystem extends AccessControlSystemImpl{
 
 
 object SiteUserInterface extends UserInterface {
-  val authCenter = SiteInternetRuntime.authCenter
+  val global = SiteInternetRuntime
 }
 
 object CONSTS {
