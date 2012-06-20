@@ -60,17 +60,22 @@ class ConfigurationSpec extends Specification with Mockito {override def is =
   
   var marketappid:String = null
   def installmarket={
-    marketappid = TestUserInterface.installRootApp("uid","""<secret>secret</secret>""");
+    TestEnvironment.registerApp("market","secret");
+    marketappid = TestUserInterface.installRootApp("uid","""<AppOwner>market</AppOwner>""");
     
     marketappid !== null
   }
   
   var normalappid:String = null
   def installApp = {
+    //Before install to market, From app
+    TestEnvironment.registerApp("app","sec2")
+    
+    //From market
     val code = TestEnvironment.getAuthcodeForServerFlow(marketappid,"uid","http")
     val accessToken = TestEnvironment.getAccessTokenByAuthtoken(marketappid,code,"secret")
 		 
-    normalappid = TestEnvironment.installApplication(accessToken.value,"""<?xml version="1.0" encoding="UTF-8" ?><secret>sec2</secret>""")
+    normalappid = TestEnvironment.installApplication(accessToken.value,"""<?xml version="1.0" encoding="UTF-8" ?><AppOwner>app</AppOwner>""")
     normalappid !== null
   }
   

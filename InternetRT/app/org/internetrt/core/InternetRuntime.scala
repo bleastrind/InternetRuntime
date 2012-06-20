@@ -41,6 +41,10 @@ abstract class InternetRuntime{
   /**
    * 
    */
+  def registerApp(appOwner:String,appSecret:String):Boolean = {
+    authCenter.registerApp(appOwner,appSecret)
+  }
+  
   def getAuthcodeForActionFlow(appID:String,appSecret:String,workflowID:String)={
     authCenter.genAuthCode(appID,appSecret,workflowID)
   }

@@ -30,7 +30,7 @@ abstract class ConfigurationSystemImpl extends AnyRef
     appPool.getApp(userID, id)
   }
 	
-  def getAppSecretByID(userID:String,appID:String)={
-    appPool.getAppSecretByID(userID,appID)
+  def getAppOwnerByID(userID:String,appID:String)={
+    appPool.getAppOwnerByID(userID,appID)
   }
 }

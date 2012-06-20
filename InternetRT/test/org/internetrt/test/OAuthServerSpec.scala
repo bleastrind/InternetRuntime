@@ -16,9 +16,12 @@ import org.specs2.execute.Result
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import org.internetrt.persistent.AppPool
+import org.internetrt.persistent.AppOwnerPool
 import org.internetrt.persistent.StubInternalUserPool
 import org.internetrt.persistent.StubAccessTokenPool
 import org.internetrt.persistent.StubAuthCodePool
+import org.internetrt.persistent.StubAppOwnerPool
+import org.internetrt.util.Encrypt
 
 @RunWith(classOf[JUnitRunner])
 class OAuthServerSpec extends Specification with Mockito{override def is =
@@ -55,7 +58,7 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 		  object internalUserPool extends StubInternalUserPool
 		  object accessTokenPool extends StubAccessTokenPool
 		  object authCodePool extends StubAuthCodePool 
-		  
+		  val appOwnerPool = mock[AppOwnerPool]
 		  override def getUserIDAppIDPair(accessToken:String):(String,String)={
 		    super.getUserIDAppIDPair(accessToken)
 		  }
@@ -69,12 +72,13 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 	
 	def install = {
 	  val confSystem = TestEnvironment.confSystem
-	  confSystem.getAppSecretByID("userid","appid") returns "secret"
+	  confSystem.getAppOwnerByID("userid","appid") returns "owner"
+	  TestEnvironment.authCenter.appOwnerPool.get("owner") returns Some(Encrypt.encrypt( "secret"))
 	  success
 	}
 	def verify ={
 	  val confSystem = TestEnvironment.confSystem
-	  there was atLeast(1) (confSystem).getAppSecretByID("userid","appid") 
+	  there was atLeast(1) (confSystem).getAppOwnerByID("userid","appid") 
 	}
 
 	object auth extends Given[String]{

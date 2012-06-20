@@ -1,37 +1,49 @@
 package org.internetrt.core.security
-import org.internetrt.persistent.{AccessTokenPool,AuthCodePool,AppPool}
+import org.internetrt.persistent.{ AccessTokenPool, AuthCodePool, AppPool }
 import java.util.UUID
 import java.util.Date
 import org.internetrt.exceptions._
 import org.internetrt.persistent.InternalUserPool
 import org.internetrt.util.Encrypt
 import org.internetrt.core.I18n
+import org.internetrt.persistent.AppOwnerPool
 
+abstract class AuthCenterImpl extends AnyRef
+  with AuthCenter {
 
-abstract class AuthCenterImpl extends AnyRef 
-  with AuthCenter{
-	
   import global.signalSystem
   import global.confSystem
-  
-  val internalUserPool:InternalUserPool
-  val accessTokenPool:AccessTokenPool
-  val authCodePool:AuthCodePool
-  
-  def register(username:String,password:String)={
-    internalUserPool.get(username) match{
-      case Some(_)=> false
-      case None=> {
-        val uid = UUID.randomUUID().toString();
-        internalUserPool.put(username,(uid,Encrypt.encrypt(password)))
+
+  val internalUserPool: InternalUserPool
+  val accessTokenPool: AccessTokenPool
+  val authCodePool: AuthCodePool
+
+  val appOwnerPool: AppOwnerPool
+
+  def registerApp(appOwner: String, secret: String): Boolean = {
+    appOwnerPool.get(appOwner) match {
+      case Some(_) => false
+      case None => {
+        appOwnerPool.put(appOwner, Encrypt.encrypt(secret))
         true
       }
     }
   }
-  
-  def login(username:String,password:String):String={
-    internalUserPool.get(username) match{
-      case Some((uid,encryptedpassword))=>{
+
+  def registerUser(username: String, password: String) = {
+    internalUserPool.get(username) match {
+      case Some(_) => false
+      case None => {
+        val uid = UUID.randomUUID().toString();
+        internalUserPool.put(username, (uid, Encrypt.encrypt(password)))
+        true
+      }
+    }
+  }
+
+  def login(username: String, password: String): String = {
+    internalUserPool.get(username) match {
+      case Some((uid, encryptedpassword)) => {
         if (encryptedpassword == Encrypt.encrypt(password))
           uid
         else
@@ -40,69 +52,70 @@ abstract class AuthCenterImpl extends AnyRef
       case _ => throw new UserNotRegisteredException()
     }
   }
-  
-  def checkApp(userID:String, appID:String,appSecret:String):Unit={
-    val realAppsecret = confSystem.getAppSecretByID(userID,appID)
-    if( realAppsecret != appSecret )
+
+  def checkApp(userID: String, appID: String, appSecret: String): Unit = {
+    val appOwner = confSystem.getAppOwnerByID(userID, appID)
+    val realEncryptedAppsecret = appOwnerPool.get(appOwner).getOrElse("")
+
+    if (realEncryptedAppsecret != Encrypt.encrypt(appSecret))
       throw new AuthDelayException()
   }
-  
-  def genAuthCode(appID:String,userID:String):String = {
+
+  def genAuthCode(appID: String, userID: String): String = {
     val code = UUID.randomUUID().toString();
-    authCodePool.put(code,(appID,userID));
+    authCodePool.put(code, (appID, userID));
     code
   }
-  def genAuthCode(appID:String,appSecret:String,workflowID:String):String={
-     val routingInstance = signalSystem.getRoutingInstaceByworkflowID(workflowID) match{
-       case Some(ins) => ins
-       case _ => throw new AuthDelayException(I18n.REJECT)
-     };
-     val userID = routingInstance.userID;
-     
-     checkApp(userID, appID,appSecret)
-     
-     genAuthCode(appID,userID)
+  def genAuthCode(appID: String, appSecret: String, workflowID: String): String = {
+    val routingInstance = signalSystem.getRoutingInstaceByworkflowID(workflowID) match {
+      case Some(ins) => ins
+      case _ => throw new AuthDelayException(I18n.REJECT)
+    };
+    val userID = routingInstance.userID;
+
+    checkApp(userID, appID, appSecret)
+
+    genAuthCode(appID, userID)
   }
-	  /**
-	   * code can be auth token 
-	   */
-  def genAccessTokenByAuthToken(authtoken:String,appID:String,appSecret:String):AccessToken ={
+  /**
+   * code can be auth token
+   */
+  def genAccessTokenByAuthToken(authtoken: String, appID: String, appSecret: String): AccessToken = {
 
-    
-    authCodePool.get(authtoken) match{
-      case Some((appID,userID)) =>{
-	      
-		//Make sure the app send the request it self
-		checkApp(userID, appID, appSecret)
-	
+    authCodePool.get(authtoken) match {
+      case Some((appID, userID)) => {
+
+        //Make sure the app send the request it self
+        checkApp(userID, appID, appSecret)
+
         val time = new Date()
-        time.setTime(time.getTime()+10000) //expire time
-        val accessToken = AccessToken(UUID.randomUUID().toString(),time ,null)
+        time.setTime(time.getTime() + 10000) //expire time
+        val accessToken = AccessToken(UUID.randomUUID().toString(), time, null)
 
-        accessTokenPool.put(accessToken.value,(accessToken,appID,userID))
+        accessTokenPool.put(accessToken.value, (accessToken, appID, userID))
         accessToken
       }
       case None => null
     }
   }
-  
-  def getUserIDByAccessToken(accessToken:String):String = {
-	accessTokenPool.get(accessToken) match{
-      case Some((token,appID,userID))=>{
-          userID
+
+  def getUserIDByAccessToken(accessToken: String): String = {
+    accessTokenPool.get(accessToken) match {
+      case Some((token, appID, userID)) => {
+        userID
       }
       case None => null
     }
   }
-	  
-	  /**
-	   * This part is only for internal use
-	   */
-  protected[core] def getUserIDAppIDPair(accessToken:String):(String,String) ={
 
-    accessTokenPool.get(accessToken) match{
-      case Some((token,appID,userID))=>{
-          (userID,appID)
+  /**
+   * This part is only for internal use
+   */
+  protected[core] def getUserIDAppIDPair(accessToken: String): (String, String) = {
+
+    accessTokenPool.get(accessToken) match {
+      case Some((token, appID, userID)) => {
+        (userID, appID)
       }
       case None => null
     }

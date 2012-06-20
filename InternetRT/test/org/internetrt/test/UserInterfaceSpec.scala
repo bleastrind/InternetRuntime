@@ -23,6 +23,7 @@ import org.internetrt.core.io.userinterface.UserInterface
 import org.internetrt.core.io.userinterface.ClientDriver
 import akka.dispatch.Future
 import akka.dispatch.Await
+import org.internetrt.persistent.StubAppOwnerPool
 
 @RunWith(classOf[JUnitRunner])
 class UserInterfaceSpec extends Specification with Mockito {
@@ -44,10 +45,8 @@ class UserInterfaceSpec extends Specification with Mockito {
       object internalUserPool extends StubInternalUserPool
       object accessTokenPool extends StubAccessTokenPool
       object authCodePool extends StubAuthCodePool
+      object appOwnerPool extends StubAppOwnerPool
 
-      override def getUserIDAppIDPair(accessToken: String): (String, String) = {
-        super.getUserIDAppIDPair(accessToken)
-      }
     }
 
     object ioManager extends {

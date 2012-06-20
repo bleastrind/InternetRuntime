@@ -3,7 +3,7 @@ import org.internetrt.core.model.Application
 
 trait AppPool {
     def installApplication(userID:String, id:String, app:Application)
-	def getAppSecretByID(userID:String, id:String):String
+	def getAppOwnerByID(userID:String, id:String):String
 	def getApp(userID:String, id:String):Application
 	def getAppIDsByUserID(userID:String):Seq[String]
 }
@@ -14,8 +14,8 @@ class StubAppPool extends AppPool{
     System.out.println("Warnning:Using stubapppool! Only one user is valid!")
     innerMap += (id -> app)
   }
-  def getAppSecretByID(userID:String, id:String)={
-	  getApp(userID, id).secret
+  def getAppOwnerByID(userID:String, id:String)={
+	  getApp(userID, id).appOwner
   }
   
   def getApp(userID:String, id:String) = {

@@ -16,7 +16,7 @@ abstract class UserInterface {
   val clientManager = ClientsManager
   
   def register(username: String, password: String): String = {
-    if (authCenter.register(username, password)) "success" else "failed"
+    if (authCenter.registerUser(username, password)) "success" else "failed"
   }
   def login(username: String, password: String): String = {
     authCenter.login(username, password)

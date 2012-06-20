@@ -56,12 +56,13 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 	}
     def install1 = {
      // System.out.println((<secret>secret</secret> \\ "secret").text)
-      
-      TestEnvironment.confSystem.installApp("user",Application("appid", <secret>secret</secret>))
+      TestEnvironment.authCenter.registerApp("secret","secret")
+      TestEnvironment.confSystem.installApp("user",Application("appid", <AppOwner>secret</AppOwner>))
 	  success
 	}
     def install2 = {
-      TestEnvironment.confSystem.installApp("user",Application("appid2", <secret>secret2</secret>))
+      TestEnvironment.authCenter.registerApp("secret2","secret2")
+      TestEnvironment.confSystem.installApp("user",Application("appid2", <AppOwner>secret2</AppOwner>))
       success
     }
 

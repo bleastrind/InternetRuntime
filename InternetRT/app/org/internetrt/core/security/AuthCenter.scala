@@ -7,10 +7,11 @@ case class AccessToken(value:String,expire:Date,refresh:String);
 	trait AuthCenter{
 	  val global:InternetRuntime
   
+	  def registerApp(appOwner:String, secret:String):Boolean
 	  /**
 	   * Register new user, return false if user already exists
 	   */
-	  def register(username:String,password:String):Boolean
+	  def registerUser(username:String,password:String):Boolean
 	  
 	  /**
 	   * Login with internal username&password, return the uid

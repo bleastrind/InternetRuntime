@@ -48,7 +48,7 @@ trait MemoryAuthCenter extends AuthCenterImpl {
   object internalUserPool extends StubInternalUserPool
   object accessTokenPool extends StubAccessTokenPool
   object authCodePool extends StubAuthCodePool
-
+  object appOwnerPool extends StubAppOwnerPool
 }
 
 trait MemorySignalSystem extends SignalSystemImpl {

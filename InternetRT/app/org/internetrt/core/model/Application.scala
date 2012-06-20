@@ -2,7 +2,7 @@ package org.internetrt.core.model
 import org.internetrt.core.signalsystem.Signal
 
 case class Application(id:String,xml:scala.xml.Elem){
-  def secret = (xml \\ "secret").text
+  def appOwner = (xml \\ "AppOwner").text
   def accessRequests = Seq((xml \\ "AccessRequests").toString())
 }
 //abstract class Application {

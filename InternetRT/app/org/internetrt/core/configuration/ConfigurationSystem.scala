@@ -16,5 +16,5 @@ trait ConfigurationSystem{
 	def getAppIDs(userID:String):Seq[String]
 	def getApp(userID:String ,id:String):Application
 	
-    def getAppSecretByID(userID:String,appID:String):String
+    def getAppOwnerByID(userID:String,appID:String):String
 }
