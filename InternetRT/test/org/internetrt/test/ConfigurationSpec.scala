@@ -58,33 +58,38 @@ class ConfigurationSpec extends Specification with Mockito {override def is =
     val global = TestEnvironment
   }
   
-  var marketappid:String = null
+
+  var appmarketid:String = null
+  var appmarketsecret:String = null
   def installmarket={
-    TestEnvironment.registerApp("market","secret");
-    marketappid = TestUserInterface.installRootApp("uid","""<AppOwner>market</AppOwner>""");
+    val (id,secret) = TestEnvironment.registerApp("a@market.com");
+    appmarketid = id
+    appmarketsecret = secret
+    TestUserInterface.installRootApp("uid","<App><AppID>"+appmarketid+"</AppID><AppOwner>market</AppOwner></App>");
     
-    marketappid !== null
   }
   
-  var normalappid:String = null
+  var normalid:String = null
+  var normalsec:String = null
   def installApp = {
     //Before install to market, From app
-    TestEnvironment.registerApp("app","sec2")
-    
+    val (id,secret) = TestEnvironment.registerApp("aa@market.com")
+        normalid = id
+    normalsec = secret
     //From market
-    val code = TestEnvironment.getAuthcodeForServerFlow(marketappid,"uid","http")
-    val accessToken = TestEnvironment.getAccessTokenByAuthtoken(marketappid,code,"secret")
+    val code = TestEnvironment.getAuthcodeForServerFlow(appmarketid,"uid","http")
+    val accessToken = TestEnvironment.getAccessTokenByAuthtoken(appmarketid,code,appmarketsecret)
 		 
-    normalappid = TestEnvironment.installApplication(accessToken.value,"""<?xml version="1.0" encoding="UTF-8" ?><AppOwner>app</AppOwner>""")
-    normalappid !== null
+    TestEnvironment.installApplication(accessToken.value,"""<?xml version="1.0" encoding="UTF-8" ?><App><AppID>"""+normalid+"""</AppID><AppOwner>app</AppOwner></App>""")
+   
   }
   
   def query = {
-    val code = TestEnvironment.getAuthcodeForServerFlow(normalappid,"uid","http")
-    val accessToken = TestEnvironment.getAccessTokenByAuthtoken(normalappid,code,"sec2")
+    val code = TestEnvironment.getAuthcodeForServerFlow(normalid,"uid","http")
+    val accessToken = TestEnvironment.getAccessTokenByAuthtoken(normalid,code,normalsec)
 	
     val apps = TestEnvironment.getApplications(accessToken.value)
-    apps.contains(normalappid) and apps.contains(marketappid)
+    apps.contains(normalid) and apps.contains(appmarketid)
   }
   
 }

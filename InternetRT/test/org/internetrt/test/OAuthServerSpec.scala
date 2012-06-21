@@ -37,9 +37,8 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
       "Get the auth code first with appID:${appid} and userID:${userid}" ^ (auth) ^
       "ask access code with auth code and appID:${appid},appSec:${secret}" ^ (access) ^
       "access resource with access code" ^ (request) ^
-      end ^
-      																			p^
-     "Verify the Preparation"													! verify
+      end
+      //"Verify the Preparation"													! verify
      
     
    
@@ -72,13 +71,8 @@ class OAuthServerSpec extends Specification with Mockito{override def is =
 	
 	def install = {
 	  val confSystem = TestEnvironment.confSystem
-	  confSystem.getAppOwnerByID("userid","appid") returns "owner"
-	  TestEnvironment.authCenter.appOwnerPool.get("owner") returns Some(Encrypt.encrypt( "secret"))
+	  TestEnvironment.authCenter.appOwnerPool.get("appid") returns Some(Encrypt.encrypt( "secret"))
 	  success
-	}
-	def verify ={
-	  val confSystem = TestEnvironment.confSystem
-	  there was atLeast(1) (confSystem).getAppOwnerByID("userid","appid") 
 	}
 
 	object auth extends Given[String]{

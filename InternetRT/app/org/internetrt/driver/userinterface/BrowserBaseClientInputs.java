@@ -22,9 +22,19 @@ public class BrowserBaseClientInputs extends Controller{
 			String uid = SiteUserInterface.login(username,password);
 
 			session().put(CONSTS.SESSIONUID(), uid);
-			return ok();
+			return ok(uid);
 		}catch(Exception e){
 			return ok(e.getMessage());
 		}	
 	}
+	
+	public static Result installRootApp(){
+		String uid = session().get(CONSTS.SESSIONUID());
+		String xml = request().queryString().get("xml")[0];
+		
+		Boolean success =  SiteUserInterface.installRootApp(uid,xml);
+		
+		return ok(success.toString());
+	}
+	
 }

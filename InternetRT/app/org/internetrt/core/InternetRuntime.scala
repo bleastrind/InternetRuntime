@@ -41,8 +41,8 @@ abstract class InternetRuntime{
   /**
    * 
    */
-  def registerApp(appOwner:String,appSecret:String):Boolean = {
-    authCenter.registerApp(appOwner,appSecret)
+  def registerApp(email:String):(String,String) = {
+    authCenter.registerApp(email)
   }
   
   def getAuthcodeForActionFlow(appID:String,appSecret:String,workflowID:String)={
@@ -113,15 +113,13 @@ abstract class InternetRuntime{
     val (userID,appID) = authCenter.getUserIDAppIDPair(accessToken)
     
     if(aclSystem.isRoot(userID,appID)){
-	    val id = UUID.randomUUID().toString()
 	    
-	    val app = Application(id,XML.loadString(xml))
-	    aclSystem.grantAccess(userID,id, Seq("getApplications"),false)
+	    val app = Application(XML.loadString(xml))
+	    aclSystem.grantAccess(userID,app.id, Seq("getApplications"),false)
 	    confSystem.installApp(userID, app)
-	    
-	    id
+	    true
     }else
-    	null
+    	false
   }
   
   def confirmRouting(userID:String,xml:String)={

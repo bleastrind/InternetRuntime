@@ -20,10 +20,11 @@ public class OAuthAPI extends Controller {
 	 */
 	public static Result authorize(){
 		String userID = session(CONSTS.SESSIONUID());
-		
 		String appID = request().queryString().get("appID")[0];
 		String redirect_uri = request().queryString().get("redirect_uri")[0];
+		System.out.print(redirect_uri);
 		String code= org.internetrt.SiteInternetRuntime.getAuthcodeForServerFlow(appID,userID,redirect_uri);
+		System.out.print(code);
 		return redirect(redirect_uri+"?code="+code);
 	}
 	/**
@@ -32,12 +33,19 @@ public class OAuthAPI extends Controller {
 	 * @param workflowID
 	 * @return
 	 */
-	public static Result authorize(String appID, String appSecret, String workflowID){
+	public static Result authorizebyworkflow(){
+		String appID = request().queryString().get("appID")[0];
+		String appSecret = request().queryString().get("appSecret")[0];
+		String workflowID = request().queryString().get("workflowID")[0];
 		String code = SiteInternetRuntime.getAuthcodeForActionFlow(appID, appSecret,workflowID);
+		
 		return ok("{code:"+code+"}");
 	}
 	
-	public static Result token(String authtoken,String appID,String appSecret){
+	public static Result token(){
+		String authtoken = request().queryString().get("authtoken")[0];
+		String appID = request().queryString().get("appID")[0];
+		String appSecret = request().queryString().get("appSecret")[0];
 		AccessToken accesstoken = SiteInternetRuntime.getAccessTokenByAuthtoken(appID, authtoken, appSecret);
 		return ok("{access_token:\""+accesstoken.value()+
 				"\"\nexpires_in: "+accesstoken.expire()+

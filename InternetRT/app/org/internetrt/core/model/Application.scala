@@ -1,7 +1,8 @@
 package org.internetrt.core.model
 import org.internetrt.core.signalsystem.Signal
 
-case class Application(id:String,xml:scala.xml.Elem){
+case class Application(xml:scala.xml.Elem){
+  def id = (xml \\ "AppID").text
   def appOwner = (xml \\ "AppOwner").text
   def accessRequests = Seq((xml \\ "AccessRequests").toString())
 }

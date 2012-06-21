@@ -53,4 +53,11 @@ public class ConfigController extends Controller {
 		String appDetailString= org.internetrt.SiteInternetRuntime.getApplicationDetail(appID,accessToken).xml().toString();
 		return ok("{appDetail:"+appDetailString+"}");
 	}
+	
+	public static Result installApplication(){
+		String accessToken = request().queryString().get("accessToken")[0];
+		String xml = request().queryString().get("xml")[0];
+		Boolean success = org.internetrt.SiteInternetRuntime.installApplication(accessToken,xml);
+		return ok(success.toString());
+	}
 }

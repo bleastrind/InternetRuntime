@@ -54,22 +54,29 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 		val ioManager= mock[IOManager]
 		val aclSystem = mock[AccessControlSystem]
 	}
+var appid = ""
+  var appsec = ""
     def install1 = {
      // System.out.println((<secret>secret</secret> \\ "secret").text)
-      TestEnvironment.authCenter.registerApp("secret","secret")
-      TestEnvironment.confSystem.installApp("user",Application("appid", <AppOwner>secret</AppOwner>))
-	  success
+      val (id,sec)=TestEnvironment.authCenter.registerApp("secrecret")
+      appid = id
+      appsec=sec
+      TestEnvironment.confSystem.installApp("user",Application( <AppID>{id}</AppID>))
 	}
+var appid2 = ""
+  var appsec2 = ""
     def install2 = {
-      TestEnvironment.authCenter.registerApp("secret2","secret2")
-      TestEnvironment.confSystem.installApp("user",Application("appid2", <AppOwner>secret2</AppOwner>))
+       val (id,sec)=TestEnvironment.authCenter.registerApp("secrret2")  
+       appid2 = id
+      appsec2=sec
+      TestEnvironment.confSystem.installApp("user",Application(<AppID>{id}</AppID>))
       success
     }
 
 	object request extends Given[SignalResponse]{
 		def extract(text: String):SignalResponse = {
-		  val code = TestEnvironment.getAuthcodeForServerFlow("appid","user","http")
-		  val accessToken = TestEnvironment.getAccessTokenByAuthtoken("appid",code,"secret")
+		  val code = TestEnvironment.getAuthcodeForServerFlow(appid,"user","http")
+		  val accessToken = TestEnvironment.getAccessTokenByAuthtoken(appid,code,appsec)
 		  TestEnvironment.initActionFromThirdPart(accessToken.value,"signalname",null,null) // head response return the routing
 
 		}
@@ -83,8 +90,8 @@ class SignalSpedification extends Specification with Mockito{ override def is =
 	}
 	object requesttoclient extends When[(String,String),String]{
 	  def extract(p:(String,String), text:String) = {
-	    val authcode = TestEnvironment.getAuthcodeForActionFlow("appid2","secret2",p._2);
-	    val accesstoken = TestEnvironment.getAccessTokenByAuthtoken("appid2",authcode,"secret2");
+	    val authcode = TestEnvironment.getAuthcodeForActionFlow(appid2,appsec2,p._2);
+	    val accesstoken = TestEnvironment.getAccessTokenByAuthtoken(appid2,authcode,appsec2);
 	    TestEnvironment.getUserIDByAccessToken(accesstoken.value)// execute return the routing instace
 	  }
 	}
