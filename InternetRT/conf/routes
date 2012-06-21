@@ -16,8 +16,15 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
 GET		/clients/longpollingjsonp	org.internetrt.driver.userinterface.Client.longpollingjsonp
+#maintain uid,cid
 GET		/clients/longpolling	org.internetrt.driver.userinterface.Client.longpolling
+#reponse a question
 GET		/clients/response		org.internetrt.driver.userinterface.Client.response
+#login
+GET		/clients/login			org.internetrt.driver.userinterface.BrowserBaseClientInputs.login
+#register
+GET		/clients/register		org.internetrt.driver.userinterface.BrowserBaseClientInputs.register
+
 GET		/clients/test				org.internetrt.driver.userinterface.Client.test
 
 #Configurition API 
