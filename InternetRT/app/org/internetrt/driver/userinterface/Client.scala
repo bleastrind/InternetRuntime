@@ -44,7 +44,7 @@ object Client extends Controller {
         case _ => false
       }
       
-      Ok(success.toString()).withHeaders("Access-Control-Allow-Origin" -> "*")      
+      Ok(success.toString())      
   }
   def test = Action {
     request=>
@@ -81,7 +81,7 @@ object Client extends Controller {
       val result = ClientMessageActor.ref ? Join(uid, cid ,status) recover{
         case e:AskTimeoutException => {
 
-          "Timeout:"+cid // The client script can request with the cid next time s.t. it can set the status of the channel
+           "{cid:\""+cid + "\"}" // The client script can request with the cid next time s.t. it can set the status of the channel
         }
       }
 
@@ -94,7 +94,7 @@ object Client extends Controller {
   }
   def longpolling = Action{
     request =>
-      getLongPollingResult(request,i => Ok(i).withHeaders("Access-Control-Allow-Origin" -> "*"))
+      getLongPollingResult(request,i => Ok(i))
   }
   def longpollingjsonp = Action {
     request =>
@@ -106,7 +106,7 @@ class PageJavaScriptSlimClientDriver(cid:String) extends ClientDriver{
 	var channel:ActorRef = null
 	
 	def response(data:String, msgID:Option[String]){
-	  channel ! "{cid:"+cid+";data:"+data+ (msgID match {
+	  channel ! "{cid:\""+cid+"\";data:"+data+ (msgID match {
 	    case Some(id)=>";"+CONSTS.MSGID+":"+id
 	    case _=>""
 	  })+"}"

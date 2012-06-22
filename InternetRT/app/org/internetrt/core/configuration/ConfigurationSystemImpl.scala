@@ -19,8 +19,9 @@ abstract class ConfigurationSystemImpl extends AnyRef
     routingResourcePool.getRoutingsBySignal(signalID)
   }
   
-  def installApp(userID:String, app:Application)={
+  def installApp(userID:String, app:Application):Boolean={
     appPool.installApplication(userID, app.id,app)
+    app.id != null //check app format is right
   }
 
   def getAppIDs(userID:String):Seq[String]={
@@ -28,9 +29,5 @@ abstract class ConfigurationSystemImpl extends AnyRef
   }
   def getApp(userID:String, id:String):Application ={
     appPool.getApp(userID, id)
-  }
-	
-  def getAppOwnerByID(userID:String,appID:String)={
-    appPool.getAppOwnerByID(userID,appID)
   }
 }

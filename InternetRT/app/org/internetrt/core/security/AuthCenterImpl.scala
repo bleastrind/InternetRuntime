@@ -20,14 +20,12 @@ abstract class AuthCenterImpl extends AnyRef
 
   val appOwnerPool: AppOwnerPool
 
-  def registerApp(appOwner: String, secret: String): Boolean = {
-    appOwnerPool.get(appOwner) match {
-      case Some(_) => false
-      case None => {
-        appOwnerPool.put(appOwner, Encrypt.encrypt(secret))
-        true
-      }
-    }
+  def registerApp(email:String):(String,String) = {
+    val appid = UUID.randomUUID().toString();
+    val appsecret = UUID.randomUUID().toString();
+
+    appOwnerPool.put(appid, Encrypt.encrypt(appsecret))
+    (appid,appsecret)
   }
 
   def registerUser(username: String, password: String) = {
@@ -53,10 +51,10 @@ abstract class AuthCenterImpl extends AnyRef
     }
   }
 
-  def checkApp(userID: String, appID: String, appSecret: String): Unit = {
-    val appOwner = confSystem.getAppOwnerByID(userID, appID)
-    val realEncryptedAppsecret = appOwnerPool.get(appOwner).getOrElse("")
-
+  def checkApp(appID: String, appSecret: String): Unit = {
+    val realEncryptedAppsecret = appOwnerPool.get(appID).getOrElse("");
+    System.out.println(realEncryptedAppsecret)
+    System.out.println(appSecret)
     if (realEncryptedAppsecret != Encrypt.encrypt(appSecret))
       throw new AuthDelayException()
   }
@@ -73,7 +71,7 @@ abstract class AuthCenterImpl extends AnyRef
     };
     val userID = routingInstance.userID;
 
-    checkApp(userID, appID, appSecret)
+    checkApp( appID, appSecret)
 
     genAuthCode(appID, userID)
   }
@@ -86,7 +84,7 @@ abstract class AuthCenterImpl extends AnyRef
       case Some((appID, userID)) => {
 
         //Make sure the app send the request it self
-        checkApp(userID, appID, appSecret)
+        checkApp( appID, appSecret)
 
         val time = new Date()
         time.setTime(time.getTime() + 10000) //expire time

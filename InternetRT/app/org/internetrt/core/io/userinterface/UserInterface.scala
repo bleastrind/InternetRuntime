@@ -22,14 +22,11 @@ abstract class UserInterface {
     authCenter.login(username, password)
   }
   
-  def installRootApp(uid:String,xml:String) = {
-    val id = UUID.randomUUID().toString()
-	    
-	val app = Application(id,XML.loadString(xml))
-	aclSystem.grantAccess(uid,id, app.accessRequests,true)
+  def installRootApp(uid:String,xml:String):Boolean = {
+ 
+	val app = Application(XML.loadString(xml))
+	aclSystem.grantAccess(uid,app.id, app.accessRequests,true)
 	confSystem.installApp(uid, app)
-	
-	id
   }
   
   def response(uid: String, msg: String, msgID: String) = {

@@ -7,7 +7,10 @@ case class AccessToken(value:String,expire:Date,refresh:String);
 	trait AuthCenter{
 	  val global:InternetRuntime
   
-	  def registerApp(appOwner:String, secret:String):Boolean
+	  /**
+	   * Register new app, return (appid,appsecret)
+	   */
+	  def registerApp(email:String):(String,String)
 	  /**
 	   * Register new user, return false if user already exists
 	   */
